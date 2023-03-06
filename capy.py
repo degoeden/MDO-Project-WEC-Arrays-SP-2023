@@ -7,7 +7,7 @@ Created on Tue Feb 21 14:33:04 2023
 """
 
 
-import capytaine as cpt
+import capy as cpt
 import numpy as np
 import matplotlib.pyplot as plt
 
