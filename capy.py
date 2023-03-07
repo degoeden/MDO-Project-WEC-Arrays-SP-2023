@@ -3,7 +3,7 @@
 """
 Created on Tue Feb 21 14:33:04 2023
 
-@author: oliviavitale, kapil khanal
+@author: oliviavitale,
 """
 
 
@@ -20,19 +20,21 @@ else:
 
 # Defining original body
 body1 = cpt.Sphere(radius=2)
-# body1.keep_immersed_part()
-# body1.center_of_mass = (0, 0, -2)
-# body1.add_all_rigid_body_dofs()
+body1.keep_immersed_part()
+body1.center_of_mass = (0, 0, -2)
 
 
+# array_of_bodies.keep_immersed_part()
+# array_of_bodies.center_of_mass = (0, 0, -2)
+#
 body2 = body1.translated_y(20)
+body2.keep_immersed_part()
+body2.center_of_mass = (0, 0, -2)
 
 
 array_of_bodies = body1 + body2
-array_of_bodies.keep_immersed_part()
-array_of_bodies.center_of_mass = (0, 0, -2)
 array_of_bodies.add_all_rigid_body_dofs()
-array_of_bodies.show()
+#array_of_bodies.show()
 
 
 
@@ -81,7 +83,7 @@ rao = cpt.post_pro.rao(dataset, wave_direction=0.0)
 print(f"Below are the RAOs \n {rao}" )
 
 
-array_of_bodies.show()
+#array_of_bodies.show()
 
 # creating mesh of free surface
 #free_surface = cpt.FreeSurface(x_range=(-200, 200), y_range=(-200, 200), nx=200, ny=200)
