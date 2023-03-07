@@ -3,7 +3,7 @@
 """
 Created on Tue Feb 21 14:33:04 2023
 
-@author: oliviavitale
+@author: oliviavitale, kapil khanal
 """
 
 
@@ -19,49 +19,66 @@ else:
     import meshmagick.hydrostatics_old as hs
 
 # Defining original body
-body = cpt.Sphere(radius=2)
-body.keep_immersed_part()
-body.center_of_mass = (0, 0, -2)
-body.add_all_rigid_body_dofs()
-body.inertia_matrix = body.compute_rigid_body_inertia()
-body.hydrostatic_stiffness = body.compute_hydrostatic_stiffness()
+body1 = cpt.Sphere(radius=2)
+# body1.keep_immersed_part()
+# body1.center_of_mass = (0, 0, -2)
+# body1.add_all_rigid_body_dofs()
 
-# Duplicate into an array
-array_of_bodies = body.assemble_regular_array(20,(2,1))
+
+body2 = body1.translated_y(20)
+
+
+array_of_bodies = body1 + body2
+array_of_bodies.keep_immersed_part()
+array_of_bodies.center_of_mass = (0, 0, -2)
+array_of_bodies.add_all_rigid_body_dofs()
+array_of_bodies.show()
+
+
 
 from scipy.linalg import block_diag
-array_of_bodies.inertia_matrix = array_of_bodies.add_dofs_labels_to_matrix(
-    block_diag(*[body.inertia_matrix for _ in range(2)])
-    )
-array_of_bodies.hydrostatic_stiffness = array_of_bodies.add_dofs_labels_to_matrix(
-    block_diag(*[body.hydrostatic_stiffness for _ in range(2)])
-    )
-dofs = array_of_bodies.add_all_rigid_body_dofs()
-print(array_of_bodies.inertia_matrix)
-
 
 # solve diff and rad probs
+
+
+# solving for RAOs
+#array_of_bodies = body.assemble_regular_array(20,(2,1))
+print(array_of_bodies)
+def bodies_hydrostatics(body):
+    hsd = hs.Hydrostatics(mm.Mesh(body.mesh.vertices, body.mesh.faces)).hs_data
+    m = hsd['disp_mass']
+    I = np.array([[hsd['Ixx'], -1*hsd['Ixy'], -1*hsd['Ixz']],[-1*hsd['Ixy'], hsd['Iyy'], -1*hsd['Iyz']],[-1*hsd['Ixz'], -1*hsd['Iyz'], hsd['Izz']]])
+    M = block_diag(m,m,m,I)
+    body.mass = body.add_dofs_labels_to_matrix(M)
+    stiffness = hsd['stiffness_matrix']
+
+    kHS = block_diag(0,0,stiffness,0)
+    print(kHS.shape)
+    body.hydrostatic_stiffness = body.add_dofs_labels_to_matrix(kHS)
+    return body
+
+body = bodies_hydrostatics(array_of_bodies)
+
+# Duplicate into an array
+
 solver = cpt.BEMSolver()
 
 problems = [
-    cpt.DiffractionProblem(body=array_of_bodies, omega=1)
-    for dof in array_of_bodies.dofs]
+    cpt.DiffractionProblem(body=body, omega=1)
+    for dof in body.dofs]
 
 problems += [
-    cpt.RadiationProblem(body=array_of_bodies, radiating_dof=dof)
-    for dof in array_of_bodies.dofs]
+    cpt.RadiationProblem(body=body, radiating_dof=dof)
+    for dof in body.dofs]
 
 results = [solver.solve(pb,keep_details=(True)) for pb in sorted(problems)]
+
+
+
+
 dataset = cpt.assemble_dataset(results)
-
-# solving for RAOs
-
-hsd = hs.Hydrostatics(mm.Mesh(array_of_bodies.mesh.vertices, array_of_bodies.mesh.faces)).hs_data
-m = hsd['disp_mass']
-I = array_of_bodies.inertia_matrix
-
 rao = cpt.post_pro.rao(dataset, wave_direction=0.0)
-print(rao)
+print(f"Below are the RAOs \n {rao}" )
 
 
 array_of_bodies.show()
