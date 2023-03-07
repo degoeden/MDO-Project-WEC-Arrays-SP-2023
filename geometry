@@ -1,9 +1,0 @@
-import capytaine as cpt
-
-# Defining original body
-body = cpt.Sphere(radius=2,center=(0,0,0))
-body.keep_immersed_part()
-body.center_of_mass = (0, 0, -2)
-body.add_all_rigid_body_dofs()
-body.inertia_matrix = body.compute_rigid_body_inertia()
-body.hydrostatic_stiffness = body.compute_hydrostatic_stiffness()
