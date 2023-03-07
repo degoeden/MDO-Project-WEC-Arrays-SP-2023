@@ -1,0 +1,13 @@
+import capytaine as cpt
+
+# Duplicate into an array
+array_of_bodies = body.assemble_regular_array(20,(2,1))
+
+from scipy.linalg import block_diag
+array_of_bodies.inertia_matrix = array_of_bodies.add_dofs_labels_to_matrix(
+    block_diag(*[body.inertia_matrix for _ in range(2)])
+    )
+array_of_bodies.hydrostatic_stiffness = array_of_bodies.add_dofs_labels_to_matrix(
+    block_diag(*[body.hydrostatic_stiffness for _ in range(2)])
+    )
+dofs = array_of_bodies.add_all_rigid_body_dofs()
