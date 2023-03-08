@@ -1,13 +1,14 @@
 #Main Code
 
 #Our Modules
-import modules.wec_dyn as wec_dyn
-import modules.time_avg_power as time_avg_power
+from modules.wec_dyn import wec_dyn as wec_dyn
+from modules.time_avg_power import time_avg_power as time_avg_power
 import Econ
 import capy.notfinalbutworks as nfbw
 import capy.geometry
 import capy.hydrodyno
 import capy.hydrostatics
+import pandas as pd
 #import capy1 
 
 #Other packages:
@@ -43,23 +44,26 @@ def evaluate(dvs,p,omega,m,wave_amp):
     #out3 = time_avg_power(x,p,out2)
     wec_radius = dvs[0]
     wec_spacing = dvs[1]
-    F,A,B,C=nfbw.run(wec_radius,wec_spacing)
+    wec1hydro=nfbw.run(wec_radius,wec_spacing)[0]
+    wec2hydro=nfbw.run(wec_radius,wec_spacing)[1]
     n_wec=2
 
-    power_indv = []
-    XI = []
+    power_indv = [0,0]
+    XI = [0,0]
 
     # for WEC 1
+    F1,A1,B1,C1 = wec1hydro
     pto_damping = dvs[2]
     pto_stiffness = dvs[3]
-    XI[0] = wec_dyn(omega,F,A,B,C,m,pto_damping,pto_stiffness)
-    power_indv[0] = time_avg_power(XI,pto_damping,omega,A)
+    XI[0] = wec_dyn(omega,F1,A1,B1,C1,m,pto_damping,pto_stiffness)
+    power_indv[0] = time_avg_power(XI[0],pto_damping,omega,wave_amp)
 
     # for WEC 2
+    F2,A2,B2,C2 = wec2hydro
     pto_damping = dvs[2]
     pto_stiffness = dvs[3]
-    XI[1] = wec_dyn(omega,F,A,B,C,m,pto_damping,pto_stiffness)
-    power_indv[1] = time_avg_power(XI,pto_damping,omega,A)
+    XI[1] = wec_dyn(omega,F2,A2,B2,C2,m,pto_damping,pto_stiffness)
+    power_indv[1] = time_avg_power(XI[1],pto_damping,omega,wave_amp)
 
     power = sum(power_indv)
 
@@ -82,10 +86,13 @@ print('DoE Conditions: ')
 results = {'r_doe': [],
             'L_doe' : [], 'k_doe' : [],'s_doe' : [],'power':[],'efficiency':[],'LCOE':[]}
 
-
+p = 0
+omega = 1
+m = 1
+wave_amp = 1
 for i in range(np.size(x1)):
     x[i]=[r_doe[x1[i]+1],L_doe[x2[i]+1],k_doe[x3[i]+1],s_doe[x4[i]+1]]
-    Power_out,efficiency,LCOE=evaluate(x[i],p)
+    Power_out,efficiency,LCOE=evaluate(x[i],p,omega,m,wave_amp)
     results['r_doe'].append(r_doe[x1[i]+1])
     results['L_doe'].append(L_doe[x2[i]+1])
     results['k_doe'].append(k_doe[x3[i]+1])
@@ -96,6 +103,6 @@ for i in range(np.size(x1)):
 
 
 
-data = pd.Dataframe.from_dict(results)
+data = pd.DataFrame.from_dict(results)
 data.to_csv("data.csv")
 
