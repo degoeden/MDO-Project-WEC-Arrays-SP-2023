@@ -43,6 +43,7 @@ def run(radius_in,L_in):
     body1.mass = body1.add_dofs_labels_to_matrix(I1)
     KHS1 = block_diag(0,0,hsd1['stiffness_matrix'],0)
     body1.hydrostatic_stiffness = body1.add_dofs_labels_to_matrix(KHS1)
+    c1 = KHS1[2,2]
     hsd2 = hs.Hydrostatics(mm.Mesh(body2.mesh.vertices, body2.mesh.faces)).hs_data
     m2 = hsd2['disp_mass']
     I2 = body2.inertia_matrix
@@ -50,6 +51,7 @@ def run(radius_in,L_in):
     body2.mass = body2.add_dofs_labels_to_matrix(I2)
     KHS2 = block_diag(0,0,hsd2['stiffness_matrix'],0)
     body2.hydrostatic_stiffness = body2.add_dofs_labels_to_matrix(KHS2)
+    c2 = KHS2[2,2]
     # hydrodynamics
     solver = cpt.BEMSolver()
     problems1 = [
@@ -95,4 +97,4 @@ def run(radius_in,L_in):
     dif2 = res2.forces['Heave']
     ex_force2 = FK2 + dif2
     print('body 2 heave exciting force',ex_force2)
-    return ex_force1,ex_force2,a1,b1,a2,b2
+    return ex_force1,ex_force2,a1,b1,c1,a2,b2,c1
