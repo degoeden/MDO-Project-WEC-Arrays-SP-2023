@@ -97,4 +97,4 @@ def run(radius_in,L_in):
     dif2 = res2.forces['Heave']
     ex_force2 = FK2 + dif2
     print('body 2 heave exciting force',ex_force2)
-    return ex_force1,ex_force2,a1,b1,c1,a2,b2,c1
+    return [(ex_force1,a1,b1,c1),(ex_force2,a2,b2,c2)]
