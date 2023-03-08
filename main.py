@@ -67,8 +67,8 @@ def evaluate(dvs,p,omega,m,wave_amp):
     power_indv[1] = time_avg_power(XI[1],pto_damping,omega,wave_amp)
 
     power = sum(power_indv)
-    print("THIS IS POWER:")
-    print(power)
+    #print("THIS IS POWER:")
+    #print(power)
     Power_out,efficiency,LCOE = Econ.run([n_wec,dvs[0],dvs[1]],p,power)
     # Define order of modules. connect inputs and outputs
     return Power_out,efficiency,LCOE
@@ -105,6 +105,6 @@ for i in range(np.size(x1)):
     
 
 #print(results)
-#data = pd.DataFrame.from_dict(results)
-#data.to_csv("data.csv")
+data = pd.DataFrame.from_dict(results)
+data.to_csv("data.csv")
 
