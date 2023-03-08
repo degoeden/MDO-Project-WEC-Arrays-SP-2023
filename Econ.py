@@ -13,7 +13,11 @@ def power_module(P_signal,n_WEC,L,):#AC to DC conversion at power bank
     P1=np.sum(P_signal) #power into capacitor bank
     i_lines=P1/V_lines
     P_line_loss=i_lines**2*R_eff*L
-    power_out=(P1-P_line_loss)*n_WEC
+    power_substation=(P1-P_line_loss)*n_WEC
+    dist_shore=10000 # 10km
+    V_trans=10000 # 10 kV
+    P_trans_loss=(power_substation/V_trans)**2*R_eff*dist_shore
+    power_out=power_substation-P_trans_loss
     #TODO: add losses at volatage step up and transmission to shore.
     eff=power_out/P1
     return power_out, eff
@@ -45,10 +49,10 @@ def run(x,p,Power):
     n_WEC=x[0]
     dist=x[1]
     size=x[2]
-    lifetime=25#years
-    power_out,eff=power_module(P_signal,n_WEC,dist)
+    lifetime=10#years
+    power_out,eff=power_module(Power,n_WEC,dist)
     revenue = revenue_module(power_out)
     cap_costs_WEC, var_costs_WEC =cost_module(n_WEC,size,dist,eff) #income from power generated
     LCOE=(((revenue-var_costs_WEC)*lifetime)-cap_costs_WEC)/lifetime
     # Cost of capital and LCOE
-    return LCOE
+    return power_out, eff, LCOE
