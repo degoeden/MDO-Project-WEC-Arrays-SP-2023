@@ -2,7 +2,7 @@
 
 #Our Modules
 import modules.wec_dyn as wec_dyn
-import modules.time_avg_power 
+import modules.time_avg_power as time_avg_power
 import Econ
 import capy.notfinalbutworks as nfbw
 import capy.geometry
@@ -36,15 +36,21 @@ p=[]
 #...ex: control tuning parameters
 
 #link modules together
-def evaluate(x,p):
+def evaluate(dvs,omega,m,wave_amp):
     #out1 = wec_dyn(x,p)
     #out2 = capy(x,p,out1)
     #out3 = time_avg_power(x,p,out2)
-    rao1,rao2=nfbw.run(x[0],x[1])
+    wec_radius = dvs[0]
+    wec_spacing = dvs[1]
+    F,A,B,C=nfbw.run(wec_radius,wec_spacing)
 
-    power=10**5 #100kW
+    pto_damping = dvs[2]
+    pto_stiffness = dvs[3]
+    XI = wec_dyn(omega,F,A,B,C,m,pto_damping,pto_stiffness)
+    power = time_avg_power(XI,pto_damping,omega,A)
+
     n_wec=2
-    Power_out,efficiency,LCOE = Econ.run([n_wec,x[0],x[1]],p,power)
+    Power_out,efficiency,LCOE = Econ.run([n_wec,dvs[0],dvs[1]],p,power)
     # Define order of modules. connect inputs and outputs
     return Power_out,efficiency,LCOE
 
