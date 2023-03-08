@@ -43,7 +43,6 @@ M1 = block_diag(m1,m1,m1,I1)
 body1.mass = body1.add_dofs_labels_to_matrix(I1)
 KHS1 = block_diag(0,0,hsd1['stiffness_matrix'],0)
 body1.hydrostatic_stiffness = body1.add_dofs_labels_to_matrix(KHS1)
-print(body1.hydrostatic_stiffness)
 
 hsd2 = hs.Hydrostatics(mm.Mesh(body2.mesh.vertices, body2.mesh.faces)).hs_data
 m2 = hsd2['disp_mass']
@@ -52,7 +51,6 @@ M2 = block_diag(m2,m2,m2,I2)
 body2.mass = body2.add_dofs_labels_to_matrix(I2)
 KHS2 = block_diag(0,0,hsd2['stiffness_matrix'],0)
 body2.hydrostatic_stiffness = body2.add_dofs_labels_to_matrix(KHS2)
-print(body2.hydrostatic_stiffness)
 
 # hydrodynamics
 solver = cpt.BEMSolver()
