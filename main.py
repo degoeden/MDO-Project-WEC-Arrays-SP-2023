@@ -59,15 +59,24 @@ L_doe=[200,300,400]
 k_doe=[100,200,300]
 s_doe=[10,20,30]
 print('DoE Conditions: ')
+
+results = {'r_doe': [],
+            'L_doe' : [], 'k_doe' : [],'s_doe' : [],'power':[],'efficiency':[],'LCOE':[]}
+
+
 for i in range(np.size(x1)):
     x[i]=[r_doe[x1[i]+1],L_doe[x2[i]+1],k_doe[x3[i]+1],s_doe[x4[i]+1]]
-    print(x[i])
+    Power_out,efficiency,LCOE=evaluate(x[i],p)
+    results['r_doe'].append(r_doe[x1[i]+1])
+    results['L_doe'].append(L_doe[x2[i]+1])
+    results['k_doe'].append(L_doe[x3[i]+1])
+    results['s_doe'].append(L_doe[x4[i]+1])
+    results['power'].append(Power_out)
+    results['efficiency'].append(efficiency)
+    results['LCOE'].append(LCOE)
 
 
-Power_out,efficiency,LCOE=evaluate(x[1],p)
-print('Power_out')
-print(Power_out)
-print('Efficiency')
-print(efficiency)
-print('LCOE')
-print(LCOE)
+
+data = pd.Dataframe.from_dict(results)
+data.to_csv("data.csv")
+
