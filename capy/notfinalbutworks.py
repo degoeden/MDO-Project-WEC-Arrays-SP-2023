@@ -73,14 +73,14 @@ def run(radius_in,L_in):
     rao2 = cpt.post_pro.rao(dataset2)
     # added mass and damping
     b1 = dataset1['radiation_damping'].sel(radiating_dof='Heave',
-                                     influenced_dof='Heave'))
+                                     influenced_dof='Heave')
     a1 = dataset1['added_mass'].sel(radiating_dof='Heave',
-                                     influenced_dof='Heave'))
+                                     influenced_dof='Heave')
 
     b2 = dataset2['radiation_damping'].sel(radiating_dof='Heave',
-                                     influenced_dof='Heave'))
+                                     influenced_dof='Heave')
     a2 = dataset2['added_mass'].sel(radiating_dof='Heave',
-                                     influenced_dof='Heave'))
+                                     influenced_dof='Heave')
     # heave exciting force
     test1 = cpt.DiffractionProblem(body=body1, omega=1, wave_direction=0.)
     res1 = solver.solve(test1)
