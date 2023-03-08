@@ -18,16 +18,18 @@ if version.parse(meshmagick.__version__) < version.parse('3.0'):
 else:
     import meshmagick.hydrostatics_old as hs
 from scipy.linalg import block_diag
+from capytaine.bem.airy_waves import airy_waves_potential, airy_waves_velocity, froude_krylov_force
+
 
 def run(radius_in,L_in):
     # define bodies
-    body1 = cpt.Sphere(radius=2,center=(0,0,0))
+    body1 = cpt.Sphere(radius=radius_in,center=(0,0,0))
     body1.keep_immersed_part()
     body1.center_of_mass = (0, 0, -radius_in)
     body1.add_all_rigid_body_dofs()
     body1.inertia_matrix = body1.compute_rigid_body_inertia()
     body1.hydrostatic_stiffness = body1.compute_hydrostatic_stiffness()
-    body2 = cpt.Sphere(radius=2,center=(0,L_in,0))
+    body2 = cpt.Sphere(radius=radius_in,center=(0,L_in,0))
     body2.keep_immersed_part()
     body2.center_of_mass = (0, 0, -radius_in)
     body2.add_all_rigid_body_dofs()
@@ -69,4 +71,28 @@ def run(radius_in,L_in):
     results2 = [solver.solve(pb,keep_details=(True)) for pb in sorted(problems2)]
     dataset2 = cpt.assemble_dataset(results2)
     rao2 = cpt.post_pro.rao(dataset2)
-    return rao1,rao2
+    # added mass and damping
+    b1 = dataset1['radiation_damping'].sel(radiating_dof='Heave',
+                                     influenced_dof='Heave'))
+    a1 = dataset1['added_mass'].sel(radiating_dof='Heave',
+                                     influenced_dof='Heave'))
+
+    b2 = dataset2['radiation_damping'].sel(radiating_dof='Heave',
+                                     influenced_dof='Heave'))
+    a2 = dataset2['added_mass'].sel(radiating_dof='Heave',
+                                     influenced_dof='Heave'))
+    # heave exciting force
+    test1 = cpt.DiffractionProblem(body=body1, omega=1, wave_direction=0.)
+    res1 = solver.solve(test1)
+    FK1 = froude_krylov_force(test1)['Heave']
+    dif1 = res1.forces['Heave']
+    ex_force1 = FK1 + dif1
+    print('body 1 heave exciting force',ex_force1)
+
+    test2 = cpt.DiffractionProblem(body=body2, omega=1, wave_direction=0.)
+    res2 = solver.solve(test2)
+    FK2 = froude_krylov_force(test2)['Heave']
+    dif2 = res2.forces['Heave']
+    ex_force2 = FK2 + dif2
+    print('body 2 heave exciting force',ex_force2)
+    return ex_force1,ex_force2,a1,b1,a2,b2
