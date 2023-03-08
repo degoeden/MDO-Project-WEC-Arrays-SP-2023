@@ -26,4 +26,5 @@ def hydrostatics(body):
     body.mass = body.add_dofs_labels_to_matrix(I)
     KHS = block_diag(0,0,hsd['stiffness_matrix'],0)
     body.hydrostatic_stiffness = body.add_dofs_labels_to_matrix(KHS)
-    return I, M, hydrostatics(body)
+    c = KHS[2,2]
+    return c, hydrostatics(body)
