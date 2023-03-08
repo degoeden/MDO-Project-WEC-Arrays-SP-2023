@@ -36,20 +36,33 @@ p=[]
 #...ex: control tuning parameters
 
 #link modules together
-def evaluate(dvs,omega,m,wave_amp):
+def evaluate(dvs,p,omega,m,wave_amp):
+    # dvs = [radius all wecs, spacing, damping wec 1, stiffness wec 1, damping 2, stiffness 2]
     #out1 = wec_dyn(x,p)
     #out2 = capy(x,p,out1)
     #out3 = time_avg_power(x,p,out2)
     wec_radius = dvs[0]
     wec_spacing = dvs[1]
     F,A,B,C=nfbw.run(wec_radius,wec_spacing)
+    n_wec=2
 
+    power_indv = []
+    XI = []
+
+    # for WEC 1
     pto_damping = dvs[2]
     pto_stiffness = dvs[3]
-    XI = wec_dyn(omega,F,A,B,C,m,pto_damping,pto_stiffness)
-    power = time_avg_power(XI,pto_damping,omega,A)
+    XI[0] = wec_dyn(omega,F,A,B,C,m,pto_damping,pto_stiffness)
+    power_indv[0] = time_avg_power(XI,pto_damping,omega,A)
 
-    n_wec=2
+    # for WEC 2
+    pto_damping = dvs[2]
+    pto_stiffness = dvs[3]
+    XI[1] = wec_dyn(omega,F,A,B,C,m,pto_damping,pto_stiffness)
+    power_indv[1] = time_avg_power(XI,pto_damping,omega,A)
+
+    power = sum(power_indv)
+
     Power_out,efficiency,LCOE = Econ.run([n_wec,dvs[0],dvs[1]],p,power)
     # Define order of modules. connect inputs and outputs
     return Power_out,efficiency,LCOE
