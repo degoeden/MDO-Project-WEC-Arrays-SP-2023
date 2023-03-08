@@ -53,6 +53,7 @@ def evaluate(dvs,p,omega,m,wave_amp):
 
     # for WEC 1
     F1,A1,B1,C1 = wec1hydro
+    print(F1)
     pto_damping = dvs[2]
     pto_stiffness = dvs[3]
     XI[0] = wec_dyn(omega,F1,A1,B1,C1,m,pto_damping,pto_stiffness)
