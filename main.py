@@ -39,9 +39,6 @@ p=[]
 #link modules together
 def evaluate(dvs,p,omega,m,wave_amp):
     # dvs = [radius all wecs, spacing, damping wec 1, stiffness wec 1, damping 2, stiffness 2]
-    #out1 = wec_dyn(x,p)
-    #out2 = capy(x,p,out1)
-    #out3 = time_avg_power(x,p,out2)
     wec_radius = dvs[0]
     wec_spacing = dvs[1]
     results = nfbw.run(wec_radius,wec_spacing)
@@ -78,11 +75,13 @@ x1=[0,0,0,1,-1,1,-1,1,-1,1,-1,1,-1,1,-1,1,-1]
 x2=[0,1,-1,0,0,-1,1,-1,1,1,-1,-1,1,1,-1,1,-1]
 x3=[0,1,-1,1,1,0,0,-1,1,-1,1,1,-1,-1,1,1,-1]
 x4=[0,1,-1,1,1,1,-1,0,0,-1,1,-1,1,1,-1,-1,1]
+x5=[0,1,-1]
+x6=[0,1,-1]
 x=np.zeros([17,4])
-r_doe=[4,6,8]
-L_doe=[30,40,50]
+r_doe=[4,8,12]
+L_doe=[30,60,90]
 k_doe=[200,400,600]
-s_doe=[100,300,500]
+d_doe=[100,300,500]
 print('DoE Conditions: ')
 
 results = {'r_doe': [],
@@ -93,18 +92,16 @@ omega = 1
 m = 1
 wave_amp = 1
 for i in range(np.size(x1)):
-    x[i]=[r_doe[x1[i]+1],L_doe[x2[i]+1],k_doe[x3[i]+1],s_doe[x4[i]+1]]
+    x[i]=[r_doe[x1[i]+1],L_doe[x2[i]+1],k_doe[x3[i]+1],d_doe[x4[i]+1]]
     Power_out,efficiency,LCOE=evaluate(x[i],p,omega,m,wave_amp)
     results['r_doe'].append(r_doe[x1[i]+1])
     results['L_doe'].append(L_doe[x2[i]+1])
-    results['k_doe'].append(k_doe[x3[i]+1])
-    results['s_doe'].append(s_doe[x4[i]+1])
+    results['k1_doe'].append(k_doe[x3[i]+1])
+    results['d1_doe'].append(d_doe[x4[i]+1])
     results['power'].append(Power_out)
     results['efficiency'].append(efficiency)
     results['LCOE'].append(LCOE)
     
-
-#print(results)
 data = pd.DataFrame.from_dict(results)
 data.to_csv("data.csv")
 
