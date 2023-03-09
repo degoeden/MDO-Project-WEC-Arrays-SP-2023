@@ -107,6 +107,6 @@ for i in range(np.size(x1)):
     results['efficiency'].append(efficiency)
     results['LCOE'].append(LCOE)
     
-data = pd.DataFrame.from_dict(results)
-data.to_csv("data.csv")
+#data = pd.DataFrame.from_dict(results)
+#data.to_csv("data.csv")
 
