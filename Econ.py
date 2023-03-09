@@ -10,7 +10,7 @@ def power_module(P_signal,n_WEC,L,OEE):#AC to DC conversion at power bank
     #integrate power of voltage produced at WEC and distribute to power bank, return max power available for distribution
     R_eff=5*10**-3 #ohm/meter
     V_lines=500 # Volts 
-    P1=np.sum(P_signal)*n_WEC #power into capacitor bank
+    P1=np.abs(np.sum(P_signal)) #power into capacitor bank
     #print(P1)
     i_lines=P1/V_lines
     P_line_loss=i_lines**2*R_eff*L
@@ -45,15 +45,14 @@ def cost_module(n_WEC,size,dist,eff):
     var_cost_WEC = n_WEC*10000/eff # need simple relations for how maint costs scale.
     return cap_cost_WEC, var_cost_WEC
 
-
 # Core Econ function to call from main
 
 def run(x,p,Power): 
     print('Running Econ module')
     # Unpack variables: this will need to be editied to match order from main 
     n_WEC=x[0]
-    dist=x[1]
-    size=x[2]
+    size=x[1]
+    dist=x[2]
     lifetime=10#years
     OEE=0.9
     power_out,eff=power_module(Power,n_WEC,dist,OEE)
