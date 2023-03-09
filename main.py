@@ -44,8 +44,9 @@ def evaluate(dvs,p,omega,m,wave_amp):
     #out3 = time_avg_power(x,p,out2)
     wec_radius = dvs[0]
     wec_spacing = dvs[1]
-    wec1hydro=nfbw.run(wec_radius,wec_spacing)[0]
-    wec2hydro=nfbw.run(wec_radius,wec_spacing)[1]
+    results = nfbw.run(wec_radius,wec_spacing)
+    wec1hydro=results[0]
+    wec2hydro=results[1]
     n_wec=2
 
     power_indv = [0,0]
