@@ -33,9 +33,9 @@ def revenue_module(p_out,OEE):
     return revenue
 
 def cost_module(n_WEC,size,dist,eff):
-    a=0.5*10**3 #$/m2
-    b=1.0*10**3 #$/m
-    c=1.0*10**5 #$
+    a=0.0*10**3 #$/m2
+    b=1.0*10**1 #$/m
+    c=1.0*10**4 #$
     finance_rate=0.07
     risk_free_rate=0.04
     tax_rate=0.21
@@ -59,6 +59,6 @@ def run(x,p,Power):
     power_out,eff=power_module(Power,n_WEC,dist,OEE)
     revenue = revenue_module(power_out,OEE)
     cap_costs_WEC, var_costs_WEC =cost_module(n_WEC,size,dist,eff) #income from power generated
-    LCOE=((var_costs_WEC*lifetime)+cap_costs_WEC)/(power_out/1000*8760*OEE*lifetime)
+    LCOE=((var_costs_WEC*lifetime)+cap_costs_WEC)/(power_out/(10**6)*8760*OEE*lifetime)
     # Cost of capital and LCOE
     return power_out, eff, LCOE
