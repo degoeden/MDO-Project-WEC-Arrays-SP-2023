@@ -37,7 +37,7 @@ p=[]
 #...ex: control tuning parameters
 
 #link modules together
-def evaluate(dvs,p,omega,m,wave_amp):
+def evaluate(dvs,p,omega,rho,wave_amp):
     # dvs = [radius all wecs, spacing, damping wec 1, stiffness wec 1, damping 2, stiffness 2]
     wec_radius = dvs[0]
     wec_spacing = dvs[1]
@@ -48,6 +48,7 @@ def evaluate(dvs,p,omega,m,wave_amp):
 
     power_indv = [0,0]
     XI = [0,0]
+    m = rho*3*np.pi/4*wec_radius**3
 
     # for WEC 1
     F1,A1,B1,C1 = wec1hydro
@@ -85,15 +86,15 @@ d_doe=[100,300,500]
 print('DoE Conditions: ')
 
 results = {'r_doe': [],
-            'L_doe' : [], 'k_doe' : [],'s_doe' : [],'power':[],'efficiency':[],'LCOE':[]}
+            'L_doe' : [], 'k_doe' : [],'d_doe' : [],'power':[],'efficiency':[],'LCOE':[]}
 
 p = 0
 omega = 1
-m = 1
+rho = 850 # density of our special material
 wave_amp = 1
 for i in range(np.size(x1)):
     x[i]=[r_doe[x1[i]+1],L_doe[x2[i]+1],k_doe[x3[i]+1],d_doe[x4[i]+1]]
-    Power_out,efficiency,LCOE=evaluate(x[i],p,omega,m,wave_amp)
+    Power_out,efficiency,LCOE=evaluate(x[i],p,omega,rho,wave_amp)
     results['r_doe'].append(r_doe[x1[i]+1])
     results['L_doe'].append(L_doe[x2[i]+1])
     results['k1_doe'].append(k_doe[x3[i]+1])
