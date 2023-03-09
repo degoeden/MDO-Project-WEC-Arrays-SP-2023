@@ -48,7 +48,7 @@ def evaluate(dvs,p,omega,rho,wave_amp):
 
     power_indv = [0,0]
     XI = [0,0]
-    m = rho*3*np.pi/4*wec_radius**3
+    m = rho*4*np.pi/3*wec_radius**3
 
     # for WEC 1
     F1,A1,B1,C1 = wec1hydro
