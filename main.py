@@ -76,8 +76,8 @@ x1=[0,0,0,1,-1,1,-1,1,-1,1,-1,1,-1,1,-1,1,-1]
 x2=[0,1,-1,0,0,-1,1,-1,1,1,-1,-1,1,1,-1,1,-1]
 x3=[0,1,-1,1,1,0,0,-1,1,-1,1,1,-1,-1,1,1,-1]
 x4=[0,1,-1,1,1,1,-1,0,0,-1,1,-1,1,1,-1,-1,1]
-x5=[0,1,-1]
-x6=[0,1,-1]
+#x5=[0,1,-1]
+#x6=[0,1,-1]
 x=np.zeros([17,4])
 r_doe=[4,8,12]
 L_doe=[30,60,90]
@@ -97,8 +97,8 @@ for i in range(np.size(x1)):
     Power_out,efficiency,LCOE=evaluate(x[i],p,omega,rho,wave_amp)
     results['r_doe'].append(r_doe[x1[i]+1])
     results['L_doe'].append(L_doe[x2[i]+1])
-    results['k1_doe'].append(k_doe[x3[i]+1])
-    results['d1_doe'].append(d_doe[x4[i]+1])
+    results['k_doe'].append(k_doe[x3[i]+1])
+    results['d_doe'].append(d_doe[x4[i]+1])
     results['power'].append(Power_out)
     results['efficiency'].append(efficiency)
     results['LCOE'].append(LCOE)
