@@ -60,8 +60,8 @@ def evaluate(dvs,p,omega,rho,wave_amp):
 
     # for WEC 2
     F2,A2,B2,C2 = wec2hydro
-    pto_damping = dvs[2]
-    pto_stiffness = dvs[3]
+    pto_damping = dvs[4]
+    pto_stiffness = dvs[5]
     XI[1] = wec_dyn(omega,F2,A2,B2,C2,m,pto_damping,pto_stiffness)
     power_indv[1] = time_avg_power(XI[1],pto_damping,omega,wave_amp)
 
@@ -78,27 +78,31 @@ x3=[1,-1,1,-1,0,0,-1,1,-1,1,1,-1,-1,1,1,-1,0]
 x4=[1,-1,1,-1,1,-1,0,0,-1,1,-1,1,1,-1,-1,1,0]
 x5=[1,-1,-1,1,1,-1,1,-1,0,0,-1,1,-1,1,1,-1,0]
 x6=[1,-1,1,-1,-1,1,1,-1,1,-1,0,0,-1,1,-1,1,0]
-x=np.zeros([17,4])
-r_doe=[4,8,12]
-L_doe=[30,60,90]
-k_doe=[200,400,600]
-d_doe=[100,300,500]
+x=np.zeros([17,6])
+r_doe=[2,3,4]
+L_doe=[8,10,12]
+k1_doe=[200,400,600]
+d1_doe=[100,300,500]
+k2_doe=[200,400,600]
+d2_doe=[100,300,500]
 print('DoE Conditions: ')
 
 results = {'r_doe': [],
-            'L_doe' : [], 'k_doe' : [],'d_doe' : [],'power':[],'efficiency':[],'LCOE':[]}
+            'L_doe' : [], 'k1_doe' : [],'d1_doe' : [], 'k2_doe' : [],'d2_doe' : [],'power':[],'efficiency':[],'LCOE':[]}
 
 p = 0
 omega = 1
 rho = 850 # density of our special material
 wave_amp = 1
 for i in range(np.size(x1)):
-    x[i]=[r_doe[x1[i]+1],L_doe[x2[i]+1],k_doe[x3[i]+1],d_doe[x4[i]+1]]
+    x[i]=[r_doe[x1[i]+1],L_doe[x2[i]+1],k1_doe[x3[i]+1],d1_doe[x4[i]+1],k1_doe[x5[i]+1],d1_doe[x6[i]+1]]
     Power_out,efficiency,LCOE=evaluate(x[i],p,omega,rho,wave_amp)
     results['r_doe'].append(r_doe[x1[i]+1])
     results['L_doe'].append(L_doe[x2[i]+1])
-    results['k_doe'].append(k_doe[x3[i]+1])
-    results['d_doe'].append(d_doe[x4[i]+1])
+    results['k1_doe'].append(k1_doe[x3[i]+1])
+    results['d1_doe'].append(d1_doe[x4[i]+1])
+    results['k2_doe'].append(k2_doe[x5[i]+1])
+    results['d2_doe'].append(d2_doe[x6[i]+1])
     results['power'].append(Power_out)
     results['efficiency'].append(efficiency)
     results['LCOE'].append(LCOE)
