@@ -1,0 +1,59 @@
+argcomplete==2.1.1
+asttokens==2.2.1
+backcall==0.2.0
+brotlipy @ file:///D:/bld/brotlipy_1666764795627/work
+capytaine @ file:///D:/bld/capytaine_1670969103896/work
+certifi==2022.12.7
+cffi @ file:///D:/bld/cffi_1671179520384/work
+charset-normalizer @ file:///home/conda/feedstock_root/build_artifacts/charset-normalizer_1661170624537/work
+comm==0.1.2
+contourpy==1.0.7
+cryptography @ file:///D:/bld/cryptography-split_1677821521115/work
+cycler==0.11.0
+debugpy==1.6.6
+decorator==5.1.1
+executing==1.2.0
+fonttools==4.39.0
+idna @ file:///home/conda/feedstock_root/build_artifacts/idna_1663625384323/work
+ipykernel==6.21.2
+ipython==8.10.0
+jedi==0.18.2
+jupyter_client==8.0.3
+jupyter_core==5.2.0
+kiwisolver==1.4.4
+matplotlib==3.7.1
+matplotlib-inline==0.1.6
+meshmagick @ https://github.com/LHEEA/meshmagick/archive/master.zip
+nest-asyncio==1.5.6
+numpy @ file:///D:/bld/numpy_1675642697443/work
+packaging @ file:///home/conda/feedstock_root/build_artifacts/packaging_1673482170163/work
+pandas @ file:///D:/bld/pandas_1674136611544/work
+parso==0.8.3
+pickleshare==0.7.5
+Pillow==9.4.0
+platformdirs==3.0.0
+pooch @ file:///home/conda/feedstock_root/build_artifacts/pooch_1677600624926/work
+prompt-toolkit==3.0.37
+psutil==5.9.4
+pure-eval==0.2.2
+pycparser @ file:///home/conda/feedstock_root/build_artifacts/pycparser_1636257122734/work
+Pygments==2.14.0
+pyOpenSSL @ file:///home/conda/feedstock_root/build_artifacts/pyopenssl_1672659226110/work
+pyparsing==3.0.9
+PySocks @ file:///D:/bld/pysocks_1661604991356/work
+python-dateutil @ file:///home/conda/feedstock_root/build_artifacts/python-dateutil_1626286286081/work
+pytz @ file:///home/conda/feedstock_root/build_artifacts/pytz_1673864280276/work
+pywin32==305
+pyzmq==25.0.0
+requests @ file:///home/conda/feedstock_root/build_artifacts/requests_1673863902341/work
+scipy==1.10.1
+six @ file:///home/conda/feedstock_root/build_artifacts/six_1620240208055/work
+stack-data==0.6.2
+tornado==6.2
+traitlets==5.9.0
+typing_extensions @ file:///home/conda/feedstock_root/build_artifacts/typing_extensions_1665144421445/work
+urllib3 @ file:///home/conda/feedstock_root/build_artifacts/urllib3_1673452138552/work
+vtk==9.2.6
+wcwidth==0.2.6
+win-inet-pton @ file:///D:/bld/win_inet_pton_1667051142467/work
+xarray @ file:///home/conda/feedstock_root/build_artifacts/xarray_1675801625528/work
