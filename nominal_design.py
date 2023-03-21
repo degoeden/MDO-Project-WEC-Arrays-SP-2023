@@ -1,7 +1,7 @@
-import main
+import doe
 from modules.wec_dyn import wec_dyn as wec_dyn
 from modules.time_avg_power import time_avg_power as time_avg_power
-import Econ
+import modules.Econ as Econ
 import capy.notfinalbutworks as nfbw
 import capy.geometry
 import capy.hydrodyno
@@ -27,7 +27,7 @@ results = nfbw.run(r,L)
 hydro=results[0]
 XI = wec_dyn(omega,hydro[0],hydro[1],hydro[2],hydro[3],rho*4/3*np.pi*r**3,d1,k1)
 P = time_avg_power(XI,d1,omega,A)
-Power_out,efficiency,LCOE = main.evaluate(x,0,omega,rho,A)
+Power_out,efficiency,LCOE = doe.evaluate(x,0,omega,rho,A)
 print("--------------------------------------")
 print("Power out: ", Power_out)
 print("Efficiency: ", efficiency)
