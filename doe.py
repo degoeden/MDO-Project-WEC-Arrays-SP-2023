@@ -3,11 +3,11 @@
 #Our Modules
 from modules.wec_dyn import wec_dyn as wec_dyn
 from modules.time_avg_power import time_avg_power as time_avg_power
-import Econ
-import capy.notfinalbutworks as nfbw
-import capy.geometry
-import capy.hydrodyno
-import capy.hydrostatics
+import modules.Econ as Econ
+import modules.capy.notfinalbutworks as nfbw
+import modules.capy.geometry
+import modules.capy.hydrodyno
+import modules.capy.hydrostatics
 import pandas as pd
 #import capy1 
 
