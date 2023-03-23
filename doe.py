@@ -4,10 +4,8 @@
 from modules.wec_dyn import wec_dyn as wec_dyn
 from modules.time_avg_power import time_avg_power as time_avg_power
 import modules.Econ as Econ
-import modules.capy.notfinalbutworks as nfbw
-import modules.capy.geometry
-import modules.capy.hydrodyno
-import modules.capy.hydrostatics
+import modules.hydro as hydro
+
 import pandas as pd
 #import capy1 
 
@@ -41,7 +39,7 @@ def evaluate(dvs,p,omega,rho,wave_amp):
     # dvs = [radius all wecs, spacing, damping wec 1, stiffness wec 1, damping 2, stiffness 2]
     wec_radius = dvs[0]
     wec_spacing = dvs[1]
-    results = nfbw.run(wec_radius,wec_spacing)
+    results = hydro.run(wec_radius,wec_spacing)
     wec1hydro=results[0]
     wec2hydro=results[1]
     n_wec=2
