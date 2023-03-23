@@ -15,8 +15,8 @@ A = 1.5
 rho_wec = 850
 p = [omega,A,rho_wec]
 
+# Run Model and Print Results
 Power_out,efficiency,LCOE = model.run(x,p)
-print("--------------------------------------")
 print("Power out: ", Power_out)
 print("Efficiency: ", efficiency)
 print("LCOE: ", LCOE)

@@ -48,7 +48,7 @@ def cost_module(n_WEC,size,dist,eff):
 # Core Econ function to call from main
 
 def run(x,Power): 
-    print('Running Econ module')
+    #print('Running Econ module')
     # Unpack variables: this will need to be editied to match order from main 
     n_WEC=x[0]
     size=x[1]
