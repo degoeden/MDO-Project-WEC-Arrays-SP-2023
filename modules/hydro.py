@@ -6,6 +6,7 @@ Created on Tue Feb 21 14:33:04 2023
 @author: oliviavitale
 """
 
+import shutup
 
 import capytaine as cpt
 import numpy as np
@@ -22,6 +23,7 @@ from capytaine.bem.airy_waves import airy_waves_potential, airy_waves_velocity, 
 
 
 def run(radius_in,L_in):
+    shutup.please()
     # define bodies
     body1 = cpt.Sphere(radius=radius_in,center=(0,0,0))
     body1.keep_immersed_part()
@@ -63,7 +65,7 @@ def run(radius_in,L_in):
     results1 = [solver.solve(pb,keep_details=(True)) for pb in sorted(problems1)]
     dataset1 = cpt.assemble_dataset(results1)
     rao1 = cpt.post_pro.rao(dataset1)
-    print(rao1)
+    #print(rao1)
     problems2 = [
         cpt.DiffractionProblem(body=body2, omega=1)
         for dof in body2.dofs]
@@ -89,12 +91,13 @@ def run(radius_in,L_in):
     FK1 = froude_krylov_force(test1)['Heave']
     dif1 = res1.forces['Heave']
     ex_force1 = FK1 + dif1
-    print('body 1 heave exciting force',ex_force1)
+    #print('body 1 heave exciting force',ex_force1)
 
     test2 = cpt.DiffractionProblem(body=body2, omega=1, wave_direction=0.)
     res2 = solver.solve(test2)
     FK2 = froude_krylov_force(test2)['Heave']
     dif2 = res2.forces['Heave']
     ex_force2 = FK2 + dif2
-    print('body 2 heave exciting force',ex_force2)
+    shutup.jk()
+    #print('body 2 heave exciting force',ex_force2)
     return [(ex_force1,a1.to_numpy(),b1.to_numpy(),c1),(ex_force2,a2.to_numpy(),b2.to_numpy(),c2)]
