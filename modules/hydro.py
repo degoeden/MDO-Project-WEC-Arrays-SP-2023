@@ -6,8 +6,6 @@ Created on Tue Feb 21 14:33:04 2023
 @author: oliviavitale
 """
 
-import shutup
-
 import capytaine as cpt
 import numpy as np
 import matplotlib.pyplot as plt
@@ -23,7 +21,6 @@ from capytaine.bem.airy_waves import airy_waves_potential, airy_waves_velocity, 
 
 
 def run(radius_in,L_in):
-    shutup.please()
     # define bodies
     body1 = cpt.Sphere(radius=radius_in,center=(0,0,0))
     body1.keep_immersed_part()
@@ -98,6 +95,5 @@ def run(radius_in,L_in):
     FK2 = froude_krylov_force(test2)['Heave']
     dif2 = res2.forces['Heave']
     ex_force2 = FK2 + dif2
-    shutup.jk()
     #print('body 2 heave exciting force',ex_force2)
     return [(ex_force1,a1.to_numpy(),b1.to_numpy(),c1),(ex_force2,a2.to_numpy(),b2.to_numpy(),c2)]
