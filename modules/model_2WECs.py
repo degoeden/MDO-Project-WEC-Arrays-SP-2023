@@ -1,7 +1,7 @@
-import Econ as Econ
-import hydro as hydro
-from wec_dyn import wec_dyn as wec_dyn
-from time_avg_power import time_avg_power as time_avg_power
+import modules.Econ as Econ
+import modules.hydro as hydro
+from modules.wec_dyn import wec_dyn as wec_dyn
+from modules.time_avg_power import time_avg_power as time_avg_power
 from numpy import pi as pi
 import numpy as np
 
@@ -11,7 +11,6 @@ def run(x,p):
     nWEC = 2    # There are two WECs
     # Initialize some Vectors
     power_indv = np.zeros(nWEC) #   Each WEC's power out
-    XI = np.zeros(nWEC)         #   Each WEC's heave motion RAO
     damp = np.zeros(nWEC)       #   Each WEC's pto damping
     stif = np.zeros(nWEC)       #   Each WEC's pto stiffness
 
@@ -37,8 +36,8 @@ def run(x,p):
     # Dynamics and Controls Modules
     for i in range(nWEC):
         F,A,B,C = hydro_results[i]  #   [Exciting Force RAO, Added mass, Wave damping, Hydrostatic restoring]
-        XI[i] = wec_dyn(omega,F,A,B,C,m,damp[i],stif[i])    #   Heave motion RAO   
-        power_indv[i] = time_avg_power(XI[i],damp[i],omega,wave_amp)    #   Time Average Power captured
+        XI = wec_dyn(omega,F,A,B,C,m,damp[i],stif[i])    #   Heave motion RAO   
+        power_indv[i] = time_avg_power(XI,damp[i],omega,wave_amp)    #   Time Average Power captured
     power = sum(power_indv) #   sum power outs
 
     # Power Transmission and Economics Module

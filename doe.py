@@ -65,7 +65,7 @@ def evaluate(dvs,p,omega,rho,wave_amp):
 
     power = sum(power_indv)
 
-    Power_out,efficiency,LCOE = Econ.run([n_wec,dvs[0],dvs[1]],p,power)
+    Power_out,efficiency,LCOE = Econ.run([n_wec,dvs[0],dvs[1]],power)
     # Define order of modules. connect inputs and outputs
     return Power_out,efficiency,LCOE
 
