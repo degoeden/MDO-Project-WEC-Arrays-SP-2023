@@ -9,5 +9,5 @@ def gradient_objective(x,p):
     return Power_out
 
 def gradient_method(x0,p):
-    scipy_opt.minimize(gradient_objective, x0, method='nelder-mead', options={'xatol': 1e-8, 'disp': True})
-    return x_best
+    res = scipy_opt.minimize(-gradient_objective, x0, method='nelder-mead', args = p, options={'xatol': 1e-8, 'disp': True})
+    return res.x
