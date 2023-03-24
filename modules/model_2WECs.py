@@ -6,9 +6,9 @@ from numpy import pi as pi
 import numpy as np
 
 # x = [radius all wecs, spacing, damping wec 1, stiffness wec 1, damping 2, stiffness 2]
-# p = [Wave Frequency, Wave Amplitude, density of WEC material]
+# p = [Wave Frequency, Wave Amplitude, density of WEC material, number of WECs]
 def run(x,p):
-    nWEC = 2    # There are two WECs
+    nWEC = p[3]
     # Initialize some Vectors
     power_indv = np.zeros(nWEC) #   Each WEC's power out
     damp = np.zeros(nWEC)       #   Each WEC's pto damping

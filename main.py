@@ -2,7 +2,7 @@
 import A3_interface as A3
 
 # Initial WEC design
-r = 2
+r = 5
 L = 20
 d1 = 100
 d2 = 100
@@ -14,6 +14,7 @@ x0 = [r,L,d1,k1,d2,k2]
 omega = 1.047
 A = 1.5
 rho_wec = 850
-p = [omega,A,rho_wec]
+n_wec = 2
+p = [omega,A,rho_wec,n_wec]
 
 A3.gradient_method(x0,p)
