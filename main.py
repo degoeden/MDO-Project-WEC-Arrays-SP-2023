@@ -2,12 +2,12 @@
 import A3_interface as A3
 
 # Initial WEC design
-r = 5
+r = 8
 L = 20
-d1 = 100
-d2 = 100
-k1 = 300
-k2 = 300
+d1 = 500
+d2 = 500
+k1 = 500
+k2 = 500
 x0 = [r,L,d1,k1,d2,k2]
 
 # Parameters
