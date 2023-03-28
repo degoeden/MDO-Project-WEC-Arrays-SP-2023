@@ -20,5 +20,6 @@ p = [omega,A,rho_wec,n_wec]
 bnds=[[2.5,15],[2,10],[10,500],[0,500],[10,500],[0,500]]
 opt={'xatol': 1e-2, 'disp': True}
 
-#A3.gradient_method(x0,p,bnds,opt)
-A3.heuristic_method(p,bnds)
+best = A3.gradient_method(x0,p,bnds,opt)
+print(best)
+#A3.heuristic_method(p,bnds)
