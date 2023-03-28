@@ -2,7 +2,6 @@
 import scipy.optimize as scipy_opt
 import modules.model_2WECs as model
 import numpy as np
-from platypus import NSGAII
 
 def outofbounds(x,p):       #   Checks if any x's are out of bounds
     are_we = False
@@ -40,5 +39,6 @@ def gradient_method(x0,p,bnds,opt):     #   Gradient Method Search Algorithm
     res = scipy_opt.minimize(objective, x0, method='nelder-mead', args = p, bounds=bnds, options=opt)
     return res.x
 
-def GA_method(x0,p,bnds):   #   GA method search algorithm
-    
+def heuristic_method(p,bnds):        #   GA method search algorithm
+    res = scipy_opt.differential_evolution(objective, bnds, args = p)
+    return res.x
