@@ -27,13 +27,14 @@ def outofbounds(x,p):       #   Checks if any x's are out of bounds
 
 def gradient_objective(x,p):    #   Calculates LCOE
     Power_out,efficiency,LCOE = model.run(x,p)  #   runs the model
-    if Power_out < 1000:        #   Checks constraint on Power out
-        LCOE = np.inf
-    if outofbounds(x,p):        #   Checks if any design variables are out of bounds
-        LCOE = np.inf
-        print(x)
+    #if Power_out < 1000:        #   Checks constraint on Power out
+    #    LCOE = np.inf
+    #if outofbounds(x,p):        #   Checks if any design variables are out of bounds
+    #    LCOE = np.inf
+    #    print(x)
+    print(LCOE)
     return LCOE
 
-def gradient_method(x0,p):
-    res = scipy_opt.minimize(gradient_objective, x0, method='nelder-mead', args = p, options={'xatol': 1e-8, 'disp': True})
+def gradient_method(x0,p,bnds,opt):
+    res = scipy_opt.minimize(gradient_objective, x0, method='nelder-mead', args = p, bounds=bnds, options=opt)
     return res.x
