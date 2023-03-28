@@ -6,7 +6,7 @@ import numpy as np
 # Incoming internal variables:
 # Power vs frequency ouput from WEC array elements
 
-def power_module(P_signal,n_WEC,L,OEE):#AC to DC conversion at power bank
+def power_module(P_signal,L,OEE):#AC to DC conversion at power bank
     #integrate power of voltage produced at WEC and distribute to power bank, return max power available for distribution
     R_eff=5*10**-3 #ohm/meter
     V_lines=500 # Volts 
@@ -26,16 +26,11 @@ def power_module(P_signal,n_WEC,L,OEE):#AC to DC conversion at power bank
     eff=power_out/(P1)
     return power_out, eff
 
-def revenue_module(p_out,OEE):
-    mean_rate=0.2/1000 # $/kwhr
-    hr_yr=8760
-    revenue=p_out*mean_rate*hr_yr*OEE
-    return revenue
 
 def cost_module(n_WEC,size,dist,eff):
     a=0.0*10**3 #$/m2
-    b=1.0*10**1 #$/m
-    c=1.0*10**3 #$
+    b=1.0*10**4 #$/m
+    c=1.0*10**5 #$
     finance_rate=0.07
     risk_free_rate=0.04
     tax_rate=0.21
@@ -55,8 +50,7 @@ def run(x,Power):
     dist=x[2]
     lifetime=10#years
     OEE=0.9
-    power_out,eff=power_module(Power,n_WEC,dist,OEE)
-    revenue = revenue_module(power_out,OEE)
+    power_out,eff=power_module(Power,dist,OEE)
     cap_costs_WEC, var_costs_WEC =cost_module(n_WEC,size,dist,eff) #income from power generated
     LCOE=((var_costs_WEC*lifetime)+cap_costs_WEC)/(power_out/(10**3)*8760*OEE*lifetime)
     # Cost of capital and LCOE

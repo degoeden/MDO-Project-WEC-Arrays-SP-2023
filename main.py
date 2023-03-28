@@ -17,4 +17,7 @@ rho_wec = 850
 n_wec = 2
 p = [omega,A,rho_wec,n_wec]
 
-A3.gradient_method(x0,p)
+bnds=[[2.5,15],[30,100],[10,500],[0,500],[10,500],[0,500]]
+opt={'xatol': 1e-2, 'disp': True}
+
+A3.gradient_method(x0,p,bnds,opt)
