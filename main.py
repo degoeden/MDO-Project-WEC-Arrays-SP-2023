@@ -4,10 +4,10 @@ import A3_interface as A3
 # Initial WEC design
 r = 8
 space = 3
-d1 = 500
-d2 = 500
-k1 = 500
-k2 = 500
+d1 = 300
+d2 = 300
+k1 = 300
+k2 = 300
 x0 = [r,space,d1,k1,d2,k2]
 
 # Parameters
@@ -20,6 +20,6 @@ p = [omega,A,rho_wec,n_wec]
 bnds=[[2.5,15],[2,10],[10,500],[0,500],[10,500],[0,500]]
 opt={'xatol': 1e-2, 'disp': True}
 
-best = A3.gradient_method(x0,p,bnds,opt)
-print(best)
-#A3.heuristic_method(p,bnds)
+#best = A3.gradient_method(x0,p,bnds,opt)
+#print(best)
+A3.heuristic_method(p,bnds)
