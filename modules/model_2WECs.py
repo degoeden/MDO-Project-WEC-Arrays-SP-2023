@@ -5,7 +5,7 @@ from modules.time_avg_power import time_avg_power as time_avg_power
 from numpy import pi as pi
 import numpy as np
 
-# x = [radius all wecs, spacing, damping wec 1, stiffness wec 1, damping 2, stiffness 2]
+# x = [radius all wecs, spacing multiplier, damping wec 1, stiffness wec 1, damping 2, stiffness 2]
 # p = [Wave Frequency, Wave Amplitude, density of WEC material, number of WECs]
 def run(x,p):
     nWEC = p[3]
