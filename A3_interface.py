@@ -2,6 +2,7 @@
 import scipy.optimize as scipy_opt
 import modules.model_2WECs as model
 import numpy as np
+from platypus import NSGAII
 
 def outofbounds(x,p):       #   Checks if any x's are out of bounds
     are_we = False
@@ -25,7 +26,7 @@ def outofbounds(x,p):       #   Checks if any x's are out of bounds
     
     return are_we
 
-def gradient_objective(x,p):    #   Calculates LCOE
+def objective(x,p):         #   Calculates LCOE
     Power_out,efficiency,LCOE = model.run(x,p)  #   runs the model
     #if Power_out < 1000:        #   Checks constraint on Power out
     #    LCOE = np.inf
@@ -35,6 +36,9 @@ def gradient_objective(x,p):    #   Calculates LCOE
     print(LCOE)
     return LCOE
 
-def gradient_method(x0,p,bnds,opt):
-    res = scipy_opt.minimize(gradient_objective, x0, method='nelder-mead', args = p, bounds=bnds, options=opt)
+def gradient_method(x0,p,bnds,opt):     #   Gradient Method Search Algorithm
+    res = scipy_opt.minimize(objective, x0, method='nelder-mead', args = p, bounds=bnds, options=opt)
     return res.x
+
+def GA_method(x0,p,bnds):   #   GA method search algorithm
+    
