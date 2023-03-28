@@ -16,7 +16,7 @@ def run(x,p):
 
     # Unpack Design Variables
     wec_radius = x[0]
-    wec_spacing = x[1]
+    wec_spacing = x[1]*wec_radius
     for i in range(nWEC):
         damp[i] = x[2+2*i]
         stif[i] = x[3+2*i]
