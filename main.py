@@ -9,7 +9,7 @@ d2 = 300
 k1 = 300                            #   PTO stiffness
 k2 = 300
 x0 = [r,space,d1,k1,d2,k2]
-bnds=[[2.5,15],[2,10],[10,500],[0,500],[10,500],[0,500]]    #   Set bounds for design variables
+bnds=[[2.5,15],[4,20],[10,10**7],[0,10**7],[10,10**7],[0,10**7]]    #   Set bounds for design variables
 
 # Parameters
 omega = 1.047                       #   Wave Frequency
@@ -17,12 +17,11 @@ A = 1.5                             #   Wave Amplitude
 rho_wec = 850                       #   Density of WEC material
 n_wec = 2                           #   Number of WEC's - will be in x soon                                 
 p = [omega,A,rho_wec,n_wec] 
-
+opt={'xatol': 1e-3, 'disp': True}  
 # ================================================================================ #
 # Run Optimization
-best = A3.heuristic_method(p,bnds)          #   Heuristic Optimization
-#opt={'xatol': 1e-2, 'disp': True}           #   Options: for gradient only
-#best = A3.gradient_method(x0,p,bnds,opt)    #   Gradient Optimization
+#best = A3.heuristic_method(p,bnds,opt)          #   Heuristic Optimization
+best = A3.gradient_method(x0,p,bnds,opt)    #   Gradient Optimization
 # ================================================================================ #
 # Print Best
 print(best)
