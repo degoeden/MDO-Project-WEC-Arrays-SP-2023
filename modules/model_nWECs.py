@@ -5,4 +5,5 @@ from modules.time_avg_power import time_avg_power as time_avg_power
 from numpy import pi as pi
 import numpy as np
 
-#
+# x = [radius all wecs, x location, y location, pto damping, ... other wecs x y and d]
+# p = [Wave Frequency, Wave Amplitude, density of WEC material, number of WECs]
