@@ -4,12 +4,10 @@ import A3_interface as A3
 # Initial WEC design
 r = 8                               #   WEC Radius
 space = 3                           #   WEC spacing multiplier (multiplies by the radius to give spacing)
-d1 = 300                            #   PTO damping
-d2 = 300    
-k1 = 300                            #   PTO stiffness
-k2 = 300
-x0 = [r,space,d1,k1,d2,k2]
-bnds=[[2.5,15],[4,20],[10,10**7],[0,10**7],[10,10**7],[0,10**7]]    #   Set bounds for design variables
+d1 = 1e5                            #   PTO damping
+d2 = 1e5    
+x0 = [r,space,d1,d2]
+bnds=[[2.5,15],[4,20],[10,10**7],[10,10**7]]    #   Set bounds for design variables
 
 # Parameters
 omega = 1.047                       #   Wave Frequency
