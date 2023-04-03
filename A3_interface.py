@@ -29,7 +29,6 @@ def objective(x,*args):         #   Calculates LCOE
     p = args
     Power_out,efficiency,LCOE = model.run(x,p)  #   runs the model
     print(LCOE)
-    #print(-Power_out)
     return LCOE
 
 def objective1(x,args):         #   Calculates LCOE
