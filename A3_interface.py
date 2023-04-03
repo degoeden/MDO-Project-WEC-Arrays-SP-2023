@@ -28,16 +28,18 @@ def outofbounds(x,p):       #   Checks if any x's are out of bounds
 def objective(x,*args):         #   Calculates LCOE
     p = args
     Power_out,efficiency,LCOE = model.run(x,p)  #   runs the model
-    #if Power_out < 1000:        #   Checks constraint on Power out
-    #    LCOE = np.inf
-    #if outofbounds(x,p):        #   Checks if any design variables are out of bounds
-    #    LCOE = np.inf
-    #    print(x)
+    print(LCOE)
+    #print(-Power_out)
+    return LCOE
+
+def objective1(x,args):         #   Calculates LCOE
+    p = args
+    Power_out,efficiency,LCOE = model.run(x,p)  #   runs the model
     print(LCOE)
     return LCOE
 
 def gradient_method(x0,p,bnds,opt):     #   Gradient Method Search Algorithm
-    res = scipy_opt.minimize(objective, x0, method='nelder-mead', args=p, bounds=bnds, options=opt)
+    res = scipy_opt.minimize(objective1, x0, method='nelder-mead', args=p, bounds=bnds, options=opt)
     return res.x
 
 def heuristic_method(p,bnds,opt):       #   GA method search algorithm
