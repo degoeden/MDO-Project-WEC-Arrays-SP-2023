@@ -22,7 +22,7 @@ def run(x,p):
     wec_radius = x[0]
     for i in range(nWEC):
         wecx[i] = x[1+i*3]
-        wecy[i] = y[2+i*3]
+        wecy[i] = x[2+i*3]
         damp[i] = x[3+i*3]
     
     # Unpack Parameters
@@ -46,6 +46,9 @@ def run(x,p):
     power = sum(power_indv) #   sum power outs
 
     # Power Transmission and Economics Module
-    Power_out,efficiency,LCOE = Econ.run([nWEC,wec_radius,wec_spacing],power)
-
+    # We need a new econ module that can account for different spacings
+    #Power_out,efficiency,LCOE = Econ.run([nWEC,wec_radius,wec_spacing],power)
+    Power_out = power
+    LCOE = m/power
+    efficiency = 1
     return Power_out,efficiency,LCOE,stif
