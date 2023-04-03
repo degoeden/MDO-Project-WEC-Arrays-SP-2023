@@ -1,5 +1,5 @@
 import modules.Econ as Econ
-import modules.hydro as hydro
+import modules.geometry as geom
 from modules.wec_dyn import wec_dyn as wec_dyn
 from modules.time_avg_power import time_avg_power as time_avg_power
 from numpy import pi as pi
@@ -33,7 +33,7 @@ def run(x,p):
     m = rho_wec*4*pi/3*wec_radius**3
 
     # Hydro Module
-    hydro_results = hydro.run(wec_radius,wec_spacing)
+    hydro_results = geom.run(wec_radius,wecx,wecy)
         # hydro_results = [Exciting Force RAO, Added mass, Wave damping, Hydrostatic restoring] for each WEC
 
     # Dynamics and Controls Modules
