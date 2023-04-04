@@ -15,9 +15,13 @@ def run(x,p):
   
     # Unpack Design Variables
     wec_radius = x[0]
-    wecx = x[1]
-    wecy = x[2]
-    damp = x[3]
+    wecx = np.zeros(nWEC)
+    wecy = np.zeros(nWEC)
+    damp = np.zeros(nWEC)
+    for i in range(nWEC):
+        wecx[i] = x[1+i*3]
+        wecy[i] = x[2+i*3]
+        damp[i] = x[3+i*3]
     
     # Unpack Parameters
     omega = p[0]
@@ -41,10 +45,10 @@ def run(x,p):
         Bs[body].append(pwa_results[body][2]['damping'])
 
 
-    damp = {body:[] for body in bodies}
+    dampy = {body:[] for body in bodies}
     i = 0
     for body in bodies:
-        damp[body] = x[3][i]
+        dampy[body] = damp[i]
         i = i + 1
     
     # Dynamics and Controls Modules
@@ -54,8 +58,8 @@ def run(x,p):
         B = Bs[body][0]
         C = Cs[body][0]
         F = FK[body][0] + pwaF[body][0]
-        XI,stif = wec_dyn(omega,F,A,B,C,m,damp[body])    #   Heave motion RAO   
-        power_indv[body].append(time_avg_power(XI,damp[body],omega,wave_amp))    #   Time Average Power captured
+        XI,stif = wec_dyn(omega,F,A,B,C,m,dampy[body])    #   Heave motion RAO   
+        power_indv[body].append(time_avg_power(XI,dampy[body],omega,wave_amp))    #   Time Average Power captured
 
     # Power Transmission and Economics Module
     Power_out,efficiency,LCOE = Econ.run(wec_radius,power_indv,bodies)
