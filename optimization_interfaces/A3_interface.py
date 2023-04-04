@@ -45,5 +45,10 @@ def gradient_method2(x0,p,bnds,opt):     #   Gradient Method Search Algorithm
     return res.x
 
 def heuristic_method2(p,bnds,opt):       #   GA method search algorithm
-    res = scipy_opt.differential_evolution(objective, bounds=bnds, args=p)
+    res = scipy_opt.differential_evolution(objective2, bounds=bnds, args=p)
     return res.x
+
+
+# ================================================================================= #
+#                                   4 WECs                                          # 
+# ================================================================================= #
