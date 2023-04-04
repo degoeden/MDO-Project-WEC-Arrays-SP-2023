@@ -34,6 +34,7 @@ def run(radius_in,L_in):
     body2.add_all_rigid_body_dofs()
     body2.inertia_matrix = body2.compute_rigid_body_inertia()
     body2.hydrostatic_stiffness = body2.compute_hydrostatic_stiffness()
+    
     # hydrostatics
     hsd1 = hs.Hydrostatics(mm.Mesh(body1.mesh.vertices, body1.mesh.faces)).hs_data
     m1 = hsd1['disp_mass']
@@ -51,6 +52,7 @@ def run(radius_in,L_in):
     KHS2 = block_diag(0,0,hsd2['stiffness_matrix'],0)
     body2.hydrostatic_stiffness = body2.add_dofs_labels_to_matrix(KHS2)
     c2 = KHS2[2,2]
+    
     # hydrodynamics
     solver = cpt.BEMSolver()
     problems1 = [
@@ -62,7 +64,6 @@ def run(radius_in,L_in):
     results1 = [solver.solve(pb,keep_details=(True)) for pb in sorted(problems1)]
     dataset1 = cpt.assemble_dataset(results1)
     rao1 = cpt.post_pro.rao(dataset1)
-    #print(rao1)
     problems2 = [
         cpt.DiffractionProblem(body=body2, omega=1)
         for dof in body2.dofs]
@@ -72,6 +73,7 @@ def run(radius_in,L_in):
     results2 = [solver.solve(pb,keep_details=(True)) for pb in sorted(problems2)]
     dataset2 = cpt.assemble_dataset(results2)
     rao2 = cpt.post_pro.rao(dataset2)
+    
     # added mass and damping
     b1 = dataset1['radiation_damping'].sel(radiating_dof='Heave',
                                      influenced_dof='Heave')
@@ -82,18 +84,18 @@ def run(radius_in,L_in):
                                      influenced_dof='Heave')
     a2 = dataset2['added_mass'].sel(radiating_dof='Heave',
                                      influenced_dof='Heave')
+    
     # heave exciting force
     test1 = cpt.DiffractionProblem(body=body1, omega=1, wave_direction=0.)
     res1 = solver.solve(test1)
     FK1 = froude_krylov_force(test1)['Heave']
     dif1 = res1.forces['Heave']
     ex_force1 = FK1 + dif1
-    #print('body 1 heave exciting force',ex_force1)
 
     test2 = cpt.DiffractionProblem(body=body2, omega=1, wave_direction=0.)
     res2 = solver.solve(test2)
     FK2 = froude_krylov_force(test2)['Heave']
     dif2 = res2.forces['Heave']
     ex_force2 = FK2 + dif2
-    #print('body 2 heave exciting force',ex_force2)
+
     return [(ex_force1,a1.to_numpy(),b1.to_numpy(),c1),(ex_force2,a2.to_numpy(),b2.to_numpy(),c2)]
