@@ -22,8 +22,8 @@ p = [omega,A,rho_wec,n_wec]
 opt={'xatol': 1e-3, 'disp': True}  
 # ================================================================================= #
 # Run Optimization
-#best = A3.heuristic_method2(p,bnds,opt)      #   Heuristic Optimization
-best = A3.gradient_method2(x0,p,bnds,opt)    #   Gradient Optimization
+#best = A3.heuristic_method(p,bnds,opt)      #   Heuristic Optimization
+best = A3.gradient_method(x0,p,bnds,opt)    #   Gradient Optimization
 # ================================================================================= #
 # Print Best
 print(best)

@@ -43,4 +43,4 @@ def run(x,p):
     # Power Transmission and Economics Module
     Power_out,efficiency,LCOE = Econ.run([nWEC,wec_radius,wec_spacing],power)
 
-    return Power_out,efficiency,LCOE,stif
+    return Power_out,efficiency,LCOE

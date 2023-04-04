@@ -3,7 +3,7 @@ import scipy.optimize as scipy_opt
 import numpy as np
 
 # import model for what you want to do...
-import modules.model_4WECs as model
+import modules.n2.model_2WECs as model
 
 '''def distance_check(wecx,wecy,r):
     n = len(wecx)
