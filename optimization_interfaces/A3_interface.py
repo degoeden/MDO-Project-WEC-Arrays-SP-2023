@@ -26,7 +26,7 @@ def objective(x,*args):         #   Calculates LCOE
         LCOE = np.Infinity
     else:
         Power_out,efficiency,LCOE = model.run(x,p)  #   runs the model
-    print(LCOE)
+    print(f"This is LCOE {LCOE}")
     return LCOE
 
 def objective1(x,args):         #   Calculates LCOE
@@ -41,7 +41,7 @@ def objective1(x,args):         #   Calculates LCOE
         LCOE = np.Infinity
     else:
         Power_out,efficiency,LCOE = model.run(x,p)  #   runs the model
-    print(LCOE)
+    print(f"This is LCOE {LCOE}")
     return LCOE
 
 def gradient_method(x0,p,bnds,opt):     #   Gradient Method Search Algorithm
