@@ -35,10 +35,9 @@ def run(x,p):
     m = rho_wec*4*pi/3*wec_radius**3
 
     # Geometry and Hydro Modules
-    bodies = geom.run(wec_radius,wecx,wecy)
-    pwa_results = pwa.run(bodies)
-    Cs = hydrostatics(bodies)
-        # hydro_results = [Exciting Force RAO, Added mass, Wave damping, Hydrostatic restoring] for each WEC
+    bodies = geom.run(wec_radius,wecx,wecy) #   Get bodies
+    pwa_results = pwa.run(bodies)           #   PWA :p
+    Cs = hydrostatics(bodies)               #   Hydrostatic Restoring Coefficients
 
     # Dynamics and Controls Modules
     for i in range(nWEC):
@@ -48,7 +47,6 @@ def run(x,p):
         power_indv[i] = time_avg_power(XI,damp[i],omega,wave_amp)    #   Time Average Power captured
 
     # Power Transmission and Economics Module
-    # We need a new econ module that can account for different spacings
     Power_out,efficiency,LCOE = Econ.run([nWEC,wec_radius,wecx,wecy],power_indv)
 
     return Power_out,efficiency,LCOE,stif
