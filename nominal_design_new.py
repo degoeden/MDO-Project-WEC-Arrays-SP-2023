@@ -1,10 +1,10 @@
 import modules.n2.model_2WECs as model
 
 # WEC design
-r = 2
-L = 20
-d1 = 100
-d2 = 100
+r = 5
+L = 5
+d1 = 1e3
+d2 = 1e3
 x = [r,L,d1,d2]
 
 # Parameters

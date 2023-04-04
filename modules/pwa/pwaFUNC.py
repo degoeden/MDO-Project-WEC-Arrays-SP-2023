@@ -161,7 +161,7 @@ def run(bodies,xyzees,rho,omega):
     #     print("\n")
 
 
-        body_potential_at_neighbors = {body:{nbros : airy_waves_potential(np.array(body_neighbors_locs[body]),diff_problems[body])+ phi_j_star(new_excitation[xyz],thetas[loc_bodies[body]][nbros],nbros,xyz,z,wave_num) 
+        body_potential_at_neighbors = {body:{nbros : phi_j_star(new_excitation[xyz],thetas[loc_bodies[body]][nbros],nbros,xyz,z,wave_num) 
                                                   for nbros in neighbors} for xyz,body in loc_to_body.items()}
 
        # print(new_excitation)

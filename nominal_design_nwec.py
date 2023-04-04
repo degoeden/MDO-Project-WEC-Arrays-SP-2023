@@ -2,9 +2,9 @@ import modules.model_4WECs as model
 import numpy as np
 nwec = 4 
 # Design Vector
-r = 5
-wecx = [0, 10*r, 20*r, 30*r]
-wecy = [0, 0, 0, 0]
+r = 2
+wecx = [0, 5, 10, 15]
+wecy = [0, 5, 10, 15]
 d = [1e5, 1e5, 1e5, 1e5]
 x = np.zeros(1+3*nwec)
 x[0] = r
