@@ -1,11 +1,11 @@
 # Contains Functions to complets A3b
 import scipy.optimize as scipy_opt
-import modules.n2.model_2WECs as model
 import numpy as np
 
-# ================================================================================= #
-#                                   2 WECs                                          # 
-# ================================================================================= #
+# import model for what you want to do...
+import modules.n2.model_2WECs as model
+
+
 def outofbounds(x,p):       #   Checks if any x's are out of bounds
     are_we = False
     if x[0] < 2.5:          #   Minimum WEC radius is 2.5 meters
@@ -28,27 +28,22 @@ def outofbounds(x,p):       #   Checks if any x's are out of bounds
     
     return are_we
 
-def objective2(x,*args):         #   Calculates LCOE
+def objective(x,*args):         #   Calculates LCOE
     p = args
     Power_out,efficiency,LCOE,stif = model.run(x,p)  #   runs the model
     print(LCOE)
     return LCOE
 
-def objective12(x,args):         #   Calculates LCOE
+def objective1(x,args):         #   Calculates LCOE
     p = args
     Power_out,efficiency,LCOE,stif = model.run(x,p)  #   runs the model
     print(LCOE)
     return LCOE
 
-def gradient_method2(x0,p,bnds,opt):     #   Gradient Method Search Algorithm
-    res = scipy_opt.minimize(objective12, x0, method='nelder-mead', args=p, bounds=bnds, options=opt)
+def gradient_method(x0,p,bnds,opt):     #   Gradient Method Search Algorithm
+    res = scipy_opt.minimize(objective1, x0, method='nelder-mead', args=p, bounds=bnds, options=opt)
     return res.x
 
-def heuristic_method2(p,bnds,opt):       #   GA method search algorithm
-    res = scipy_opt.differential_evolution(objective2, bounds=bnds, args=p)
+def heuristic_method(p,bnds,opt):       #   GA method search algorithm
+    res = scipy_opt.differential_evolution(objective, bounds=bnds, args=p)
     return res.x
-
-
-# ================================================================================= #
-#                                   4 WECs                                          # 
-# ================================================================================= #
