@@ -5,6 +5,7 @@ from modules.time_avg_power import time_avg_power as time_avg_power
 from numpy import pi as pi
 import numpy as np
 import modules.pwa.pwaFUNC as pwa
+import modules.hydrostatics as hydrostatics
 
 # x = [radius all wecs, x location, y location, pto damping, ... other wecs x y and d]
 # p = [Wave Frequency, Wave Amplitude, density of WEC material, number of WECs]
@@ -36,11 +37,13 @@ def run(x,p):
     # Geometry and Hydro Modules
     bodies = geom.run(wec_radius,wecx,wecy)
     pwa_results = pwa.run(bodies)
+    Cs = hydrostatics(bodies)
         # hydro_results = [Exciting Force RAO, Added mass, Wave damping, Hydrostatic restoring] for each WEC
 
     # Dynamics and Controls Modules
     for i in range(nWEC):
-        F,A,B,C = hydro_results[i]  #   [Exciting Force RAO, Added mass, Wave damping, Hydrostatic restoring]
+        C = Cs[i]
+        F,A,B = hydro_results[i]  #   [Exciting Force RAO, Added mass, Wave damping, Hydrostatic restoring]
         XI,stif[i] = wec_dyn(omega,F,A,B,C,m,damp[i])    #   Heave motion RAO   
         power_indv[i] = time_avg_power(XI,damp[i],omega,wave_amp)    #   Time Average Power captured
 
