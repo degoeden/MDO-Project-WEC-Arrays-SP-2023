@@ -1,4 +1,4 @@
-import modules.model_2WECs as model
+import modules.TwoWECs.model_2WECs as model
 
 # WEC design
 r = 2

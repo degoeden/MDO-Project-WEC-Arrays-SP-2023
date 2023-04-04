@@ -1,6 +1,5 @@
 import modules.Econ_nWEC as Econ
 import modules.geometry as geom
-import modules.hydro as hydro
 from modules.wec_dyn import wec_dyn as wec_dyn
 from modules.time_avg_power import time_avg_power as time_avg_power
 from numpy import pi as pi
@@ -35,7 +34,7 @@ def run(x,p):
 
     # Geometry and Hydro Modules
     bodies = geom.run(wec_radius,wecx,wecy)
-    hydro_results = hydro.run(bodies)
+    hydro_results = hydro4.run(bodies)
         # hydro_results = [Exciting Force RAO, Added mass, Wave damping, Hydrostatic restoring] for each WEC
 
     # Dynamics and Controls Modules
@@ -43,12 +42,9 @@ def run(x,p):
         F,A,B,C = hydro_results[i]  #   [Exciting Force RAO, Added mass, Wave damping, Hydrostatic restoring]
         XI,stif[i] = wec_dyn(omega,F,A,B,C,m,damp[i])    #   Heave motion RAO   
         power_indv[i] = time_avg_power(XI,damp[i],omega,wave_amp)    #   Time Average Power captured
-    power = sum(power_indv) #   sum power outs
 
     # Power Transmission and Economics Module
     # We need a new econ module that can account for different spacings
     Power_out,efficiency,LCOE = Econ.run([nWEC,wec_radius,wecx,wecy],power_indv)
-    Power_out = power
-    LCOE = m/power
-    efficiency = 1
+
     return Power_out,efficiency,LCOE,stif

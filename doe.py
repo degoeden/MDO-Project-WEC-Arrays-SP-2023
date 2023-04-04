@@ -3,8 +3,8 @@
 #Our Modules
 from modules.wec_dyn import wec_dyn as wec_dyn
 from modules.time_avg_power import time_avg_power as time_avg_power
-import modules.Econ as Econ
-import modules.hydro as hydro
+import modules.TwoWECs.Econ_2WEC as Econ_2WEC
+import modules.TwoWECs.hydro2 as hydro2
 
 import pandas as pd
 #import capy1 
@@ -39,7 +39,7 @@ def evaluate(dvs,p,omega,rho,wave_amp):
     # dvs = [radius all wecs, spacing, damping wec 1, stiffness wec 1, damping 2, stiffness 2]
     wec_radius = dvs[0]
     wec_spacing = dvs[1]
-    results = hydro.run(wec_radius,wec_spacing)
+    results = hydro2.run(wec_radius,wec_spacing)
     wec1hydro=results[0]
     wec2hydro=results[1]
     n_wec=2
@@ -65,7 +65,7 @@ def evaluate(dvs,p,omega,rho,wave_amp):
 
     power = sum(power_indv)
 
-    Power_out,efficiency,LCOE = Econ.run([n_wec,dvs[0],dvs[1]],power)
+    Power_out,efficiency,LCOE = Econ_2WEC.run([n_wec,dvs[0],dvs[1]],power)
     # Define order of modules. connect inputs and outputs
     return Power_out,efficiency,LCOE
 
