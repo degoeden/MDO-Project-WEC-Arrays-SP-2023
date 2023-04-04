@@ -1,8 +1,8 @@
-import doe
+import expiriments.doe as doe
 from modules.wec_dyn import wec_dyn as wec_dyn
 from modules.time_avg_power import time_avg_power as time_avg_power
-import modules.TwoWECs.Econ_2WEC as Econ_2WEC
-import modules.TwoWECs.hydro2 as hydro2
+import modules.n2.Econ_2WEC as Econ_2WEC
+import modules.n2.hydro2 as hydro2
 
 import pandas as pd
 import numpy as np

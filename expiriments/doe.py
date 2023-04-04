@@ -3,8 +3,8 @@
 #Our Modules
 from modules.wec_dyn import wec_dyn as wec_dyn
 from modules.time_avg_power import time_avg_power as time_avg_power
-import modules.TwoWECs.Econ_2WEC as Econ_2WEC
-import modules.TwoWECs.hydro2 as hydro2
+import modules.n2.Econ_2WEC as Econ_2WEC
+import modules.n2.hydro2 as hydro2
 
 import pandas as pd
 #import capy1 
@@ -105,6 +105,6 @@ for i in range(np.size(x1)):
     results['efficiency'].append(efficiency)
     results['LCOE'].append(LCOE)
     
-#data = pd.DataFrame.from_dict(results)
-#data.to_csv("data.csv")
+data = pd.DataFrame.from_dict(results)
+data.to_csv("expiriments/data.csv")
 

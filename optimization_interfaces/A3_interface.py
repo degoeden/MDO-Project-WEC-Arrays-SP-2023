@@ -1,6 +1,6 @@
 # Contains Functions to complets A3b
 import scipy.optimize as scipy_opt
-import modules.TwoWECs.model_2WECs as model
+import modules.n2.model_2WECs as model
 import numpy as np
 
 # ================================================================================= #
