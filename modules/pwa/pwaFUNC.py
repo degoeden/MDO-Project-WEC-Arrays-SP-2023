@@ -1,18 +1,12 @@
 '''Plane wave approximation stuff slay!'''
-def plane_wave(inputs):
-    def generate_body(xyz):
-        mesh1 = cpt.meshes.predefined.mesh_sphere(radius=2,center=(xyz[0],xyz[1],xyz[2]))
-        body = cpt.FloatingBody(mesh1)
-        body.add_translation_dof(name='Heave')
-        body = body.immersed_part()
-        body.name = f'{xyz[0]}_{xyz[1]}_{xyz[2]}'
-        return body
+# Needs import stuff here
+import capytaine as cpt
+import numpy as np
 
-
+def plane_wave(bodies,omega,rho,xyzees):
     def get_results(problems):
         results = [solver.solve(pb, keep_details = True) for pb in sorted(problems)]
         return results
-
 
     #calculate angle theta_ij from centre of one body to other
     def theta_ij(X,Y): 
@@ -91,17 +85,38 @@ def plane_wave(inputs):
     #         else:
     #             result = problem.make_results_container(new_forces, sources, new_potential, new_pressure)
             return new_forces
-
+    
+    
+    
+    # ============================================================================================= #
+    # Where the actual stuff happens                                                                #
+    # ============================================================================================= #
     p = 0
-    omega = 1.1
-    rho = 850 # density of our special material
     wave_amp = 1
     wave_num =  1.0/9.81
 
 
-    N_bodies = 4
+    N_bodies = len(bodies)
     max_iteration = 2*N_bodies #(dead or alive lol)
 
+    neighbors = {(0,0,0):[(5,5,0),(10,10,0),(15,15,0)],  #so bad..need to write a funky func for it
+                (10,10,0):[(0,0,0),(5,5,0),(15,15,0)],
+                (5,5,0):[(0,0,0),(10,10,0),(15,15,0)],
+                (15,15,0):[(0,0,0),(10,10,0),(5,5,0)]     
+                }
+    loc_bodies = {body:xyz for xyz,body in zip(xyzees,bodies)}
+    loc_to_body = {xyz:body for xyz,body in zip(xyzees,bodies)}
+    solver = cpt.BEMSolver()
+
+
+    diff_problems = {body:cpt.DiffractionProblem(body=body, sea_bottom=-np.infty,
+                                        omega=omega, wave_direction=0.) for body in bodies}
+
+    rad_problems = {body: cpt.RadiationProblem(body=body, sea_bottom=-np.infty,
+                                        omega=omega) for body in bodies}
+
+    diff_results = {body.name:solver.solve(problem) for body,problem in diff_problems.items()}
+    rad_results = {body.name:solver.solve(problem) for body,problem in rad_problems.items()}
     # body_potential_at_neighbors = {body:(dict(zip(body_neighbors_locs[body], 
     #                                       airy_waves_potential(np.array(body_neighbors_locs[body]),diff_problems[body])))) for body in bodies}
 

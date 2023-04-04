@@ -34,7 +34,7 @@ def run(x,p):
 
     # Geometry and Hydro Modules
     bodies = geom.run(wec_radius,wecx,wecy)
-    hydro_results = hydro4.run(bodies)
+    hydro_results = hydro.run(bodies)
         # hydro_results = [Exciting Force RAO, Added mass, Wave damping, Hydrostatic restoring] for each WEC
 
     # Dynamics and Controls Modules

@@ -12,7 +12,8 @@ def run(r,wecx,wecy):
     for i in range(wecx):
         bodies.append(get_body(r,wecx[i],wecy[i]))
 
-    return bodies
+    xyzees = [(x,y,0) for x,y in zip(wecx,wecy)]
+    return bodies,xyzees
 
 
 # =============================================================== #
