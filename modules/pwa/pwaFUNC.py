@@ -3,7 +3,7 @@ import capytaine as cpt
 import numpy as np
 from capytaine.bem.airy_waves import airy_waves_potential, airy_waves_velocity, froude_krylov_force
 
-def plane_wave(bodies,xyzees,rho,omega):
+def run(bodies,xyzees,rho,omega):
     def get_results(problems):
         results = [solver.solve(pb, keep_details = True) for pb in sorted(problems)]
         return results
@@ -32,7 +32,6 @@ def plane_wave(bodies,xyzees,rho,omega):
         if x==xj and y==yj:
             return 0
         multiplier = np.exp((1j*k*(-1*np.abs(x-xj))*np.cos(theta)) + ((-1*np.abs(y-yj))*np.sin(theta)))
-        print(f'the multiplier for {X}{Y} and {theta} is {multiplier}')
         res = phi_ij * multiplier #kz = 0 #e^kz = 1
         return res
 
@@ -53,47 +52,48 @@ def plane_wave(bodies,xyzees,rho,omega):
         xyz_phi = {xyz :[] for xyz in xyzees}
         for k,v in phi_starj.items():
             for s,m in v.items():
-                print(f"thee value of m = {m}")
                 xyz_phi[k].append(m)
-            print("next xyz")
-        print(xyz_phi.items())
         xyz_phi = {k:sum(v) for k,v in xyz_phi.items()}
-        print("Afteer summation ")
-        print(xyz_phi.items())
         return xyz_phi
 
 
     def solve(diff,diff_res, rad_res,new_potential,keep_details=True):
-            """Solve the linear potential flow problem.
-            Parameters
-            ----------
-            problem: LinearPotentialFlowProblem
-                the problem to be solved
-            keep_details: bool, optional
-                if True, store the sources and the potential on the floating body in the output object
-                (default: True)
-            Returns
-            -------
-            LinearPotentialFlowResult
-                an object storing the problem data and its results
-            """
-            diff_pot = diff_res.potential
+        """Solve the linear potential flow problem.
+        Parameters
+        ----------
+        problem: LinearPotentialFlowProblem
+            the problem to be solved
+        keep_details: bool, optional
+            if True, store the sources and the potential on the floating body in the output object
+            (default: True)
+        Returns
+        -------
+        LinearPotentialFlowResult
+            an object storing the problem data and its results
+        """
+        
+        diff_pot = diff_res.potential
+       
+        rad_pot = rad_res.potential
+        potential = new_potential + diff_pot + rad_pot
+        rho = 1000
+        new_pressure = rho * potential
+        # Actually, for diffraction problems: pressure over jω
+        #           for radiation problems:   pressure over -ω²
+        # The correction is done in `store_force` in the `result` object.
 
-            rad_pot = rad_res.potential
-            potential = new_potential + diff_pot + rad_pot
-            rho = 1000
-            new_pressure = rho * potential
-            # Actually, for diffraction problems: pressure over jω
-            #           for radiation problems:   pressure over -ω²
-            # The correction is done in `store_force` in the `result` object.
+        new_forces = diff.body.integrate_pressure(new_pressure)
+        
 
-            new_forces = diff.body.integrate_pressure(new_pressure)
-
-    #         if not keep_details:
-    #             result = problem.make_results_container(new_forces)
-    #         else:
-    #             result = problem.make_results_container(new_forces, sources, new_potential, new_pressure)
-            return new_forces
+        if not keep_details:
+            results = diff.make_results_container(new_forces)
+        else:
+            results = diff.make_results_container(new_forces, diff_res.sources, potential, new_pressure)
+            
+        added_mass = new_forces['Heave'].real
+        
+        damping = np.abs(new_forces['Heave'].imag) * diff.omega #abs because damping should be positive? does not make sense
+        return new_forces, {'added_mass':added_mass}, {'damping':damping}
 
     # ============================================ #
     # Where the actual code happens...             #
@@ -122,7 +122,6 @@ def plane_wave(bodies,xyzees,rho,omega):
 
     diff_problems = {body:cpt.DiffractionProblem(body=body, sea_bottom=-np.infty,
                                           omega=omega, wave_direction=0.) for body in bodies}
-
     loc_diff = {loc_bodies.get(body):diff for body,diff in diff_problems.items() }
 
     rad_problems = {body: cpt.RadiationProblem(body=body, sea_bottom=-np.infty,
@@ -151,7 +150,6 @@ def plane_wave(bodies,xyzees,rho,omega):
     while iterate<max_iteration:
         # def get_all_other_phi(body_potential_at_neighbors):
         all_other_phi_each_loc = {xyz:{loc_bodies.get(d):k.get(xyz,0) for d,k in body_potential_at_neighbors.items()} for xyz in xyzees}
-        print('iteration')
        # print(all_other_phi_each_loc)
         thetas = {k:{s:theta_ij(k,s) for s,m in v.items()} for k,v in all_other_phi_each_loc.items()}
         phi_starj = {xyz:{nbros:phi_j_star(all_other_phi_each_loc[xyz][nbros],thetas[xyz][nbros],nbros,xyz,z,wave_num) for nbros in neighbors} for xyz in xyzees}
@@ -160,7 +158,6 @@ def plane_wave(bodies,xyzees,rho,omega):
         # look at the new excitation amplitude and reject if the amplitude is bigger than the last two
 
     #     print(f"excitation for {iterate}")
-        print(new_excitation)
     #     print("\n")
 
 

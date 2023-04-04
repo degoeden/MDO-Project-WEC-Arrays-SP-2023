@@ -7,9 +7,10 @@ def run(r,wecx,wecy):
         body.add_translation_dof(name='Heave')
         body = body.immersed_part()
         body.name = f'{x}_{y}_{0}'
+        return body
 
     bodies = []    
-    for i in range(wecx):
+    for i in range(len(wecx)):
         bodies.append(get_body(r,wecx[i],wecy[i]))
 
     xyzees = [(x,y,0) for x,y in zip(wecx,wecy)]

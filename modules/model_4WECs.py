@@ -12,19 +12,12 @@ import modules.hydrostatics as hydrostatics
 
 def run(x,p):
     nWEC = p[3]
-    # Initialize some Vectors
-    power_indv = np.zeros(nWEC) #   Each WEC's power out
-    wecx = np.zeros(nWEC)       #   Each WEC's x location
-    wecy = np.zeros(nWEC)       #   Each WEC's y location
-    damp = np.zeros(nWEC)       #   Each WEC's pto damping
-    stif = np.zeros(nWEC)       #   Each WEC's pto stiffness
-
+  
     # Unpack Design Variables
     wec_radius = x[0]
-    for i in range(nWEC):
-        wecx[i] = x[1+i*3]
-        wecy[i] = x[2+i*3]
-        damp[i] = x[3+i*3]
+    wecx = x[1]
+    wecy = x[2]
+    damp = x[3]
     
     # Unpack Parameters
     omega = p[0]
@@ -35,17 +28,36 @@ def run(x,p):
     m = rho_wec*4*pi/3*wec_radius**3
 
     # Geometry and Hydro Modules
-    bodies = geom.run(wec_radius,wecx,wecy) #   Get bodies
-    pwa_results = pwa.run(bodies)           #   PWSLAY
-    FK,Cs = hydrostatics(bodies)            #   Hydrostatic Restoring Coefficients
+    bodies,xyzees = geom.run(wec_radius,wecx,wecy)      #   Get bodies
+    pwa_results = pwa.run(bodies,xyzees,rho_wec,omega)  #   PWSLAY
+    FK,Cs = hydrostatics.run(bodies,omega)            #   Hydrostatic Restoring Coefficients
 
+    pwaF = {body:[] for body in bodies}
+    As = {body:[] for body in bodies}
+    Bs = {body:[] for body in bodies}
+    for body in bodies:
+        pwaF[body].append(pwa_results[body][0]['Heave'])
+        As[body].append(pwa_results[body][1]['added_mass'])
+        Bs[body].append(pwa_results[body][2]['damping'])
+
+
+    damp = {body:[] for body in bodies}
+    i = 0
+    for body in bodies:
+        damp[body] = x[3][i]
+        i = i + 1
+    
     # Dynamics and Controls Modules
-    for i in range(nWEC):
-        C = Cs[i]
-        XI,stif[i] = wec_dyn(omega,F,A,B,C,m,damp[i])    #   Heave motion RAO   
-        power_indv[i] = time_avg_power(XI,damp[i],omega,wave_amp)    #   Time Average Power captured
+    power_indv = {body:[] for body in bodies} #   Each WEC's power out
+    for body in bodies:
+        A = As[body][0]
+        B = Bs[body][0]
+        C = Cs[body][0]
+        F = FK[body][0] + pwaF[body][0]
+        XI,stif = wec_dyn(omega,F,A,B,C,m,damp[body])    #   Heave motion RAO   
+        power_indv[body].append(time_avg_power(XI,damp[body],omega,wave_amp))    #   Time Average Power captured
 
     # Power Transmission and Economics Module
-    Power_out,efficiency,LCOE = Econ.run([nWEC,wec_radius,wecx,wecy],power_indv)
+    Power_out,efficiency,LCOE = Econ.run(wec_radius,power_indv,bodies)
 
-    return Power_out,efficiency,LCOE,stif
+    return Power_out,efficiency,LCOE
