@@ -5,18 +5,18 @@ import numpy as np
 # import model for what you want to do...
 import modules.model_4WECs as model
 
-def distance_check(wecx,wecy,r):
+'''def distance_check(wecx,wecy,r):
     n = len(wecx)
     for i in range(n):
         for j in range(i+1,n):
             d = ((wecx[i]-wecx[j])**2 + (wecy[i]-wecy[j])**2)**(1/2)
             if d<10*r:
                 return True
-    return False
+    return False'''
 
 def objective(x,*args):         #   Calculates LCOE
     p = args
-    nwec = p[3]
+    '''nwec = p[3]
     wecx = np.zeros(nwec)
     wecy = np.zeros(nwec)
     for i in range(nwec):
@@ -24,14 +24,14 @@ def objective(x,*args):         #   Calculates LCOE
         wecy[i] = x[2+i*3]
     if distance_check(wecx,wecy,x[0]):
         LCOE = np.Infinity
-    else:
-        Power_out,efficiency,LCOE = model.run(x,p)  #   runs the model
+    else:'''
+    Power_out,efficiency,LCOE = model.run(x,p)  #   runs the model
     print(f"This is LCOE {LCOE}")
     return LCOE
 
 def objective1(x,args):         #   Calculates LCOE
     p = args
-    nwec = p[3]
+    '''nwec = p[3]
     wecx = np.zeros(nwec)
     wecy = np.zeros(nwec)
     for i in range(nwec):
@@ -39,8 +39,8 @@ def objective1(x,args):         #   Calculates LCOE
         wecy[i] = x[2+i*3]
     if distance_check(wecx,wecy,x[0]):
         LCOE = np.Infinity
-    else:
-        Power_out,efficiency,LCOE = model.run(x,p)  #   runs the model
+    else:'''
+    Power_out,efficiency,LCOE = model.run(x,p)  #   runs the model
     print(f"This is LCOE {LCOE}")
     return LCOE
 

@@ -32,6 +32,7 @@ def power_module(P_signal,bodies,OEE):#AC to DC conversion at power bank
         i_lines=P_signal[body][0]/V_lines
         P_line_loss=(i_lines**2)*R_eff*d[body][0]
         #P_line_loss = 0
+        #print(f"This is psignal now {P_signal[body][0]}")
         P_substation=P_substation+(P_signal[body][0]-P_line_loss)
     dist_shore=10000 # 10km
     V_trans=10000 # 10 kV
@@ -40,6 +41,7 @@ def power_module(P_signal,bodies,OEE):#AC to DC conversion at power bank
     #print(P_trans_loss)
     OEE=0.9
     power_out=(P_substation-P_trans_loss)*OEE
+    #print(f"Power out is {power_out}")
     #TODO: add losses at volatage step up and transmission to shore.
     p_sig = [p_sig[0] for p_sig in P_signal.values()]
     eff=power_out/(np.sum(p_sig))
