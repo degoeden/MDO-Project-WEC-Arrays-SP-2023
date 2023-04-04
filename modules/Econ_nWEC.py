@@ -5,7 +5,7 @@ import numpy as np
 
 # Incoming internal variables:
 # Power vs frequency ouput from WEC array elements
-def distance(x1,y1,x2,y2):
+def distance(x1,x2,y1,y2):
     return np.sqrt((x2-x1)**2+(y2-y1)**2)
 
 
@@ -26,13 +26,19 @@ def power_module(P_signal,bodies,OEE):#AC to DC conversion at power bank
     R_eff=5*10**-3 #ohm/meter
     V_lines=500 # Volts 
     P_substation=0
+    print('===================')
     for body in bodies:
+        print(xx[body][0])
+        print(xm)
         d[body].append(distance(xx[body][0],xm,yy[body][0],ym))
         i_lines=P_signal[body][0]/V_lines
         P_line_loss=i_lines**2*R_eff*d[body][0]
+        #print(P_line_loss)
         P_substation=P_substation+(P_signal[body][0]-P_line_loss)
     dist_shore=10000 # 10km
     V_trans=10000 # 10 kV
+    print('===================')
+    print(d)
     P_trans_loss=(P_substation/V_trans)**2*R_eff*dist_shore
     #print(P_trans_loss)
     OEE=0.9
