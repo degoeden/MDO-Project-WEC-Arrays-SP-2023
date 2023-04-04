@@ -9,7 +9,8 @@ nwec = 4
 r = 5
 wecx = [0, 10*r, 20*r, 30*r]
 wecy = [0, 0, 0, 0]
-damp = [1e5, 1e5, 1e5, 1e5]
+d0 = 1e5
+damp = [d0, d0, d0, d0]
 x0 = np.zeros(1+3*nwec)
 x0[0] = r
 for i in range(nwec):
