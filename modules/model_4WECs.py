@@ -36,8 +36,8 @@ def run(x,p):
 
     # Geometry and Hydro Modules
     bodies = geom.run(wec_radius,wecx,wecy) #   Get bodies
-    pwa_results = pwa.run(bodies)           #   PWA ;)
-    Cs = hydrostatics(bodies)               #   Hydrostatic Restoring Coefficients
+    pwa_results = pwa.run(bodies)           #   PWSLAY
+    FK,Cs = hydrostatics(bodies)            #   Hydrostatic Restoring Coefficients
 
     # Dynamics and Controls Modules
     for i in range(nWEC):
