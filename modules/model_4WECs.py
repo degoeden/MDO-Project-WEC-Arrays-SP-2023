@@ -4,6 +4,7 @@ from modules.wec_dyn import wec_dyn as wec_dyn
 from modules.time_avg_power import time_avg_power as time_avg_power
 from numpy import pi as pi
 import numpy as np
+import modules.pwa.pwaFUNC as pwa
 
 # x = [radius all wecs, x location, y location, pto damping, ... other wecs x y and d]
 # p = [Wave Frequency, Wave Amplitude, density of WEC material, number of WECs]
@@ -34,7 +35,7 @@ def run(x,p):
 
     # Geometry and Hydro Modules
     bodies = geom.run(wec_radius,wecx,wecy)
-    hydro_results = hydro.run(bodies)
+    pwa_results = pwa.run(bodies)
         # hydro_results = [Exciting Force RAO, Added mass, Wave damping, Hydrostatic restoring] for each WEC
 
     # Dynamics and Controls Modules

@@ -41,6 +41,14 @@ def plane_wave(bodies,xyzees,rho,omega):
       #(5, 5, 0): (8.415476709952118-2.9519008598532284j),
       #(15, 15, 0): (8.415476709952118-2.9519008598532284j)
 
+    def get_neighbors(xyzees):
+        neighbor = {xyz:[] for xyz in xyzees}
+        for xyz in xyzees:
+            for zyx in xyzees:
+                if not xyz == zyx:
+                    neighbor[xyz].append(zyx)
+        return neighbor
+
     def get_phistarj_sum(phi_starj,xyzees):
         xyz_phi = {xyz :[] for xyz in xyzees}
         for k,v in phi_starj.items():
@@ -90,10 +98,7 @@ def plane_wave(bodies,xyzees,rho,omega):
     # ============================================ #
     # Where the actual code happens...             #
     # ============================================ #
-    p = 0
-    wave_amp = 1
     wave_num =  1.0/9.81
-
 
     N_bodies = len(bodies)
     max_iteration = 2*N_bodies #(dead or alive lol)
@@ -108,7 +113,7 @@ def plane_wave(bodies,xyzees,rho,omega):
 #                 (15,15,0):[(0,0,0),(10,10,0),(5,5,0)]     
 #                }
     
-    neighbors = {xyz:xyzees.discard(xyz) for xyz in xyzees}
+    neighbors = get_neighbors(xyzees)
 
     loc_bodies = {body:xyz for xyz,body in zip(xyzees,bodies)}
     loc_to_body = {xyz:body for xyz,body in zip(xyzees,bodies)}
