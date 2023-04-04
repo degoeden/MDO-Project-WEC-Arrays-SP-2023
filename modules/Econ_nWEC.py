@@ -31,12 +31,12 @@ def power_module(P_signal,bodies,OEE):#AC to DC conversion at power bank
         d[body].append(distance(xx[body][0],xm,yy[body][0],ym))
         i_lines=P_signal[body][0]/V_lines
         P_line_loss=(i_lines**2)*R_eff*d[body][0]
-        P_line_loss = 0
+        #P_line_loss = 0
         P_substation=P_substation+(P_signal[body][0]-P_line_loss)
     dist_shore=10000 # 10km
     V_trans=10000 # 10 kV
     P_trans_loss=(P_substation/V_trans)**2*R_eff*dist_shore
-    P_trans_loss = 0
+    #P_trans_loss = 0
     #print(P_trans_loss)
     OEE=0.9
     power_out=(P_substation-P_trans_loss)*OEE
