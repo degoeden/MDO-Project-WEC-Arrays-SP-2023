@@ -30,6 +30,7 @@ def run(x,p):
 
     # Mass Calculation
     m = rho_wec*4*pi/3*wec_radius**3
+    print(m)
 
     # Geometry and Hydro Modules
     bodies,xyzees = geom.run(wec_radius,wecx,wecy)      #   Get bodies
@@ -58,6 +59,8 @@ def run(x,p):
         B = Bs[body][0]
         C = Cs[body][0]
         F = FK[body][0] + pwaF[body][0]
+        print(f"For body {body}")
+        print(f"Added mass {A} & Damp {B} & Force {F} & Stif {C}")
         XI,stif = wec_dyn(omega,F,A,B,C,m,dampy[body])    #   Heave motion RAO   
         power_indv[body].append(time_avg_power(XI,dampy[body],omega,wave_amp))    #   Time Average Power captured
 

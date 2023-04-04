@@ -90,7 +90,7 @@ def run(bodies,xyzees,rho,omega):
         else:
             results = diff.make_results_container(new_forces, diff_res.sources, potential, new_pressure)
             
-        added_mass = new_forces['Heave'].real
+        added_mass = np.abs(new_forces['Heave'].real)
         
         damping = np.abs(new_forces['Heave'].imag) * diff.omega #abs because damping should be positive? does not make sense
         return new_forces, {'added_mass':added_mass}, {'damping':damping}
