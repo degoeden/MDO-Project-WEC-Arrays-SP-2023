@@ -1,4 +1,4 @@
-import modules.Econ as Econ
+import modules.Econ_nWEC as Econ
 import modules.geometry as geom
 import modules.hydro as hydro
 from modules.wec_dyn import wec_dyn as wec_dyn
@@ -47,7 +47,7 @@ def run(x,p):
 
     # Power Transmission and Economics Module
     # We need a new econ module that can account for different spacings
-    #Power_out,efficiency,LCOE = Econ.run([nWEC,wec_radius,wec_spacing],power)
+    Power_out,efficiency,LCOE = Econ.run([nWEC,wec_radius,wecx,wecy],power_indv)
     Power_out = power
     LCOE = m/power
     efficiency = 1
