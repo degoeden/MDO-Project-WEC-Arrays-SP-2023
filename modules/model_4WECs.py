@@ -36,13 +36,12 @@ def run(x,p):
 
     # Geometry and Hydro Modules
     bodies = geom.run(wec_radius,wecx,wecy) #   Get bodies
-    pwa_results = pwa.run(bodies)           #   PWA :p
+    pwa_results = pwa.run(bodies)           #   PWA ;)
     Cs = hydrostatics(bodies)               #   Hydrostatic Restoring Coefficients
 
     # Dynamics and Controls Modules
     for i in range(nWEC):
         C = Cs[i]
-        F,A,B = hydro_results[i]  #   [Exciting Force RAO, Added mass, Wave damping, Hydrostatic restoring]
         XI,stif[i] = wec_dyn(omega,F,A,B,C,m,damp[i])    #   Heave motion RAO   
         power_indv[i] = time_avg_power(XI,damp[i],omega,wave_amp)    #   Time Average Power captured
 
