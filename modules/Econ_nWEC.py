@@ -21,7 +21,7 @@ def power_module(P_signal,xx,yy,OEE):#AC to DC conversion at power bank
         d[k]=distance(xx[k],xm,yy[k],ym)
         i_lines=P_signal[k]/V_lines
         P_line_loss=i_lines**2*R_eff*d[k]
-        P_substation=P_substation+(P_signal-P_line_loss)
+        P_substation=P_substation+(P_signal[k]-P_line_loss)
     dist_shore=10000 # 10km
     V_trans=10000 # 10 kV
     P_trans_loss=(power_substation/V_trans)**2*R_eff*dist_shore
