@@ -1,11 +1,33 @@
 # To run A3b code, import the A3 interface and run the desired A3 function: gradient_method or heuristic_method
 import optimization_interfaces.A3_interface as A3
 
+# Initial Design Vector
+r = 5
+wecx = [0, 10*r, 20*r, 30*r]
+wecy = [0, 0, 0, 0]
+d = [1e5, 1e5, 1e5, 1e5]
+x0 = [r,wecx,wecy,d]
+
+# Parameters
+omega = 1.047
+A = 1.5
+rho_wec = 850
+p = [omega,A,rho_wec,len(wecx)]
+
 # ================================================================================= #
-#                                   2 WECs                                          # 
+# Run Optimization
+#best = A3.heuristic_method(p,bnds,opt)      #   Heuristic Optimization
+best = A3.gradient_method(x0,p)    #   Gradient Optimization
+# ================================================================================= #
+
+
+
+
+# ================================================================================= #
+#                                *OLD* 2 WECs                                       # 
 # ================================================================================= #
 # Initial WEC design
-r = 8                               #   WEC Radius
+'''r = 8                               #   WEC Radius
 space = 3                           #   WEC spacing multiplier (multiplies by the radius to give spacing)
 d1 = 1e5                            #   PTO damping
 d2 = 1e5    
@@ -25,8 +47,4 @@ opt={'xatol': 1e-3, 'disp': True}
 best = A3.gradient_method2(x0,p,bnds,opt)    #   Gradient Optimization
 # ================================================================================= #
 # Print Best
-print(best)
-
-# ================================================================================= #
-#                                   n WECs                                          # 
-# ================================================================================= #
+print(best)'''

@@ -5,38 +5,15 @@ import numpy as np
 # import model for what you want to do...
 import modules.model_4WECs as model
 
-
-def outofbounds(x,p):       #   Checks if any x's are out of bounds
-    are_we = False
-    if x[0] < 2.5:          #   Minimum WEC radius is 2.5 meters
-        are_we = True
-    if x[0] > 15:           #   MAX WEC radius is 15 meters
-        are_we = True
-    if x[1] < 2*x[0]:       #   Min WEC spacing is the diameter of the WECs
-        are_we = True
-    if x[1] > 5*2*x[0]:     #   MAX WEC spacing is 5 times the diameter of the WECs
-        are_we = True
-    for i in range(p[3]):
-        if x[2+i*2] < 0:    #   No negative pto damping
-            are_we = True
-        if x[2+i*2] > 500:  #   may need a more concrete number
-            are_we = True
-        if x[3+i*2] < 0:    #   No negative pto stiffness
-            are_we = True
-        if x[3+i*2] > 500:  #   may need a more concrete number
-            are_we = True
-    
-    return are_we
-
 def objective(x,*args):         #   Calculates LCOE
     p = args
-    Power_out,efficiency,LCOE,stif = model.run(x,p)  #   runs the model
+    Power_out,efficiency,LCOE = model.run(x,p)  #   runs the model
     print(LCOE)
     return LCOE
 
 def objective1(x,args):         #   Calculates LCOE
     p = args
-    Power_out,efficiency,LCOE,stif = model.run(x,p)  #   runs the model
+    Power_out,efficiency,LCOE = model.run(x,p)  #   runs the model
     print(LCOE)
     return LCOE
 
