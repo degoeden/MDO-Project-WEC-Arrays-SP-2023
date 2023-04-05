@@ -1,19 +1,17 @@
 import modules.model_2WECs as model
 
 # WEC design
-r = 2
-L = 20
-d1 = 100
-d2 = 100
-k1 = 300
-k2 = 300
-x = [r,L,d1,k1,d2,k2]
+r = 2.5
+s = 2
+d1 = 7.12974218e+04
+d2 = 7.00031493e+03
+x = [r,s,d1,d2]
 
 # Parameters
 omega = 1.047
 A = 1.5
 rho_wec = 850
-p = [omega,A,rho_wec]
+p = [omega,A,rho_wec,2]
 
 # Run Model and Print Results
 Power_out,efficiency,LCOE = model.run(x,p)
