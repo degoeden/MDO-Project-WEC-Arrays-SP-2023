@@ -47,8 +47,8 @@ def objective1(x,args):         #   Calculates LCOE
 
 def gradient_method(x0,p,bnds,opt):     #   Gradient Method Search Algorithm
     history = []
-    def callback(x):
-        fobj = objective1(x)
+    def callback(x,p):
+        fobj = objective1(x,p)
         history.append(fobj)
     res = scipy_opt.minimize(objective1, x0, method='nelder-mead', args=p, bounds=bnds, options=opt,callback = callback)
     print("The values at each iteration")

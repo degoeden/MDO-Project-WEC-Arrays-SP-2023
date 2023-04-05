@@ -25,8 +25,8 @@ opt={'xatol': 1e-3, 'disp': True}
 
 
 
-opts = {'popsize':15,'mutation':(0.5,1),'recombination':0.8}
-best = A3.heuristic_method(p,bnds,opts)      #   Heuristic Optimization
+#opts = {'popsize':15,'mutation':(0.5,1),'recombination':0.8}
+#best = A3.heuristic_method(p,bnds,opts)      #   Heuristic Optimization
 
 
 
@@ -34,7 +34,7 @@ best = A3.heuristic_method(p,bnds,opts)      #   Heuristic Optimization
 # ================================================================================= #
 # Run Optimization
 
-#best = A3.gradient_method(x0,p,bnds,opt)    #   Gradient Optimization
+best = A3.gradient_method(x0,p,bnds,opt)    #   Gradient Optimization
 # ================================================================================= #
 # Print Best
 print(best)
