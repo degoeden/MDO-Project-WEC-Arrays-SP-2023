@@ -1,6 +1,7 @@
 # Contains Functions to complets A3b
 import scipy.optimize as scipy_opt
 import numpy as np
+import matplotlib.pyplot as plt
 
 # import model for what you want to do...
 import modules.n2.model_2WECs as model
@@ -45,7 +46,16 @@ def objective1(x,args):         #   Calculates LCOE
     return LCOE
 
 def gradient_method(x0,p,bnds,opt):     #   Gradient Method Search Algorithm
-    res = scipy_opt.minimize(objective1, x0, method='nelder-mead', args=p, bounds=bnds, options=opt)
+    history = []
+    def callback(x):
+        fobj = objective1(x)
+        history.append(fobj)
+    res = scipy_opt.minimize(objective1, x0, method='nelder-mead', args=p, bounds=bnds, options=opt,callback = callback)
+    print("The values at each iteration")
+    print(history)
+    plt.plot(range(len(history)),history)
+    plt.show()
+    plt.savefig('convergence.png')
     return res.x
 
 def heuristic_method(p,bnds,opt):       #   GA method search algorithm
