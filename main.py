@@ -8,8 +8,8 @@ d1 = 300                            #   PTO damping
 d2 = 300    
 k1 = 300                            #   PTO stiffness
 k2 = 300
-x0 = [r,space,d1,k1,d2,k2]
-bnds=[[2.5,15],[2,10],[10,500],[0,500],[10,500],[0,500]]    #   Set bounds for design variables
+x0 = [r,space,d1,d2]
+bnds=[[2.5,15],[2,10],[10,500],[10,500]]    #   Set bounds for design variables
 
 # Parameters
 omega = 1.047                       #   Wave Frequency

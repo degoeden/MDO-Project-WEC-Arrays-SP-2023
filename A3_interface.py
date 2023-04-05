@@ -40,6 +40,6 @@ def gradient_method(x0,p,bnds,opt):     #   Gradient Method Search Algorithm
     res = scipy_opt.minimize(objective, x0, method='nelder-mead', args=p, bounds=bnds, options=opt)
     return res.x
 
-def heuristic_method(p,bnds,opt):       #   GA method search algorithm
+def heuristic_method(p,bnds):       #   GA method search algorithm
     res = scipy_opt.differential_evolution(objective, bounds=bnds, args=p)
     return res.x

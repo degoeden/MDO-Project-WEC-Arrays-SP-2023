@@ -18,8 +18,7 @@ def run(x,p):
     wec_radius = x[0]
     wec_spacing = x[1]*wec_radius
     for i in range(nWEC):
-        damp[i] = x[2+2*i]
-        stif[i] = x[3+2*i]
+        damp[i] = x[2+i]
     
     # Unpack Parameters
     omega = p[0]
@@ -36,7 +35,7 @@ def run(x,p):
     # Dynamics and Controls Modules
     for i in range(nWEC):
         F,A,B,C = hydro_results[i]  #   [Exciting Force RAO, Added mass, Wave damping, Hydrostatic restoring]
-        XI = wec_dyn(omega,F,A,B,C,m,damp[i],stif[i])    #   Heave motion RAO   
+        XI = wec_dyn(omega,F,A,B,C,m,damp[i])    #   Heave motion RAO   
         power_indv[i] = time_avg_power(XI,damp[i],omega,wave_amp)    #   Time Average Power captured
     power = sum(power_indv) #   sum power outs
 
