@@ -34,6 +34,7 @@ def objective(x,*args):         #   Calculates LCOE
     #    LCOE = np.inf
     #    print(x)
     # please commit
+    # please commit
     print(LCOE)
     return LCOE
 
