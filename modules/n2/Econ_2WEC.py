@@ -8,20 +8,22 @@ import numpy as np
 
 def power_module(P_signal,L,OEE):#AC to DC conversion at power bank
     #integrate power of voltage produced at WEC and distribute to power bank, return max power available for distribution
-    R_eff=5*10**-3 #ohm/meter
-    V_lines=500 # Volts 
+    R_eff=5*10**-4 #ohm/meter
+    V_lines=5000 # Volts 
     P1=np.abs(np.sum(P_signal)) #power into capacitor bank
-    #print(P1)
+    print(P1)
     i_lines=P1/V_lines
     P_line_loss=i_lines**2*R_eff*L
     #print(P_line_loss)
     power_substation=(P1-P_line_loss)
-    dist_shore=10000 # 10km
+    dist_shore=1000 # 10km
     V_trans=10000 # 10 kV
     P_trans_loss=(power_substation/V_trans)**2*R_eff*dist_shore
     #print(P_trans_loss)
     OEE=0.9
     power_out=(power_substation-P_trans_loss)*OEE
+    if power_out<0:
+        power_out=1
     #TODO: add losses at volatage step up and transmission to shore.
     eff=power_out/(P1)
     return power_out, eff
@@ -48,6 +50,7 @@ def run(x,Power):
     n_WEC=x[0]
     size=x[1]
     dist=x[2]
+    print(size,dist)
     lifetime=10#years
     OEE=0.9
     power_out,eff=power_module(Power,dist,OEE)
