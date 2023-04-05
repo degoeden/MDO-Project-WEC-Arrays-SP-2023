@@ -33,8 +33,6 @@ def objective(x,*args):         #   Calculates LCOE
     #if outofbounds(x,p):        #   Checks if any design variables are out of bounds
     #    LCOE = np.inf
     #    print(x)
-    # please commit
-    # please commit
     print(LCOE)
     return LCOE
 
