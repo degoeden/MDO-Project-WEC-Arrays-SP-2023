@@ -6,12 +6,13 @@ import numpy as np
 #                                   2 WECs                                          # 
 # ================================================================================= #
 # Initial WEC design
-r = 8                               #   WEC Radius
-space = 3                           #   WEC spacing multiplier (multiplies by the radius to give spacing)
-d1 = 1e5                            #   PTO damping
-d2 = 1e5    
+r = 3                               #   WEC Radius
+space = 4                           #   WEC spacing multiplier (multiplies by the radius to give spacing)
+d1 = 1e6                            #   PTO damping
+d2 = 1e6    
 x0 = [r,space,d1,d2]
-bnds=[[2.5,15],[4,20],[10,10**7],[10,10**7]]    #   Set bounds for design variables
+x0 = [8, 3, 1e5, 1e5]
+bnds=[[2.5,15],[2,20],[10,10**7],[10,10**7]]    #   Set bounds for design variables
 
 # Parameters
 omega = 1.047                       #   Wave Frequency
