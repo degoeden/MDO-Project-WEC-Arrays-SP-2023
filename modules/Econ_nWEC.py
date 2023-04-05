@@ -24,8 +24,8 @@ def power_module(P_signal,bodies,OEE):#AC to DC conversion at power bank
     ym=np.mean(yym)
     d={body:[] for body in bodies}
     #integrate power of voltage produced at WEC and distribute to power bank, return max power available for distribution
-    R_eff=5*10**-3 #ohm/meter
-    V_lines=500 # Volts 
+    R_eff=5*10**-4 #ohm/meter
+    V_lines=5000 # Volts 
     P_substation=0
     for body in bodies:
         d[body].append(distance(xx[body][0],xm,yy[body][0],ym))
@@ -45,6 +45,7 @@ def power_module(P_signal,bodies,OEE):#AC to DC conversion at power bank
     #TODO: add losses at volatage step up and transmission to shore.
     p_sig = [p_sig[0] for p_sig in P_signal.values()]
     eff=power_out/(np.sum(p_sig))
+    print(power_out)
     return power_out, eff
 
 
