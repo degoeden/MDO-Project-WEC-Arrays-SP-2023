@@ -12,7 +12,6 @@ def run(x,p):
     # Initialize some Vectors
     power_indv = np.zeros(nWEC) #   Each WEC's power out
     damp = np.zeros(nWEC)       #   Each WEC's pto damping
-    stif = np.zeros(nWEC)       #   Each WEC's pto stiffness
 
     # Unpack Design Variables
     wec_radius = x[0]
