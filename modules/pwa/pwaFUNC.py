@@ -101,7 +101,7 @@ def run(bodies,xyzees,rho,omega):
         
 
         dataset1 = cpt.assemble_dataset([rad_res])
-        added_mass = new_forces['Heave'].real
+        added_mass = np.abs(new_forces['Heave'].real)
         #added_mass = dataset1['added_mass'].sel(radiating_dof='Heave',influenced_dof='Heave')
 
         print(f"added_mass compare==========================>{added_mass} and {dataset1['added_mass'].sel(radiating_dof='Heave',influenced_dof='Heave')} ")
@@ -117,7 +117,7 @@ def run(bodies,xyzees,rho,omega):
     wave_num =  1.0/9.81
 
     N_bodies = len(bodies)
-    max_iteration = N_bodies #(dead or alive lol)
+    max_iteration = N_bodies/2 #(dead or alive lol)
 
     # body_potential_at_neighbors = {body:(dict(zip(body_neighbors_locs[body], 
     #                                       airy_waves_potential(np.array(body_neighbors_locs[body]),diff_problems[body])))) for body in bodies}
