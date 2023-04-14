@@ -4,8 +4,10 @@ import numpy as np
 from capytaine.bem.airy_waves import airy_waves_potential, airy_waves_velocity, froude_krylov_force
 
 def run(bodies,xyzees,rho,omega):
+    print("entering pwa_func")
+    
     def get_results(problems):
-        results = [solver.solve(pb, keep_details = True) for pb in sorted(problems)]
+        results = [solver.solve(pb, keep_details = True) for pb in problems]
         return results
 
 
@@ -31,7 +33,8 @@ def run(bodies,xyzees,rho,omega):
         xj,yj = Y[0],Y[1]
         if x==xj and y==yj:
             return 0
-        multiplier = np.exp((1j*k*(-1*np.abs(x-xj))*np.cos(theta)) + ((-1*np.abs(y-yj))*np.sin(theta)))
+        multiplier = np.exp((1j*k*((x-xj))*np.cos(theta)) + (((y-yj))*np.sin(theta)))
+
         res = phi_ij * multiplier #kz = 0 #e^kz = 1
         return res
 
@@ -54,6 +57,7 @@ def run(bodies,xyzees,rho,omega):
             for s,m in v.items():
                 xyz_phi[k].append(m)
         xyz_phi = {k:sum(v) for k,v in xyz_phi.items()}
+       
         return xyz_phi
 
 
@@ -75,7 +79,8 @@ def run(bodies,xyzees,rho,omega):
         diff_pot = diff_res.potential
        
         rad_pot = rad_res.potential
-        potential = new_potential + diff_pot + rad_pot
+        potential =   new_potential + diff_pot + rad_pot
+        
         rho = 1000
         new_pressure = rho * potential
         # Actually, for diffraction problems: pressure over jω
@@ -83,16 +88,27 @@ def run(bodies,xyzees,rho,omega):
         # The correction is done in `store_force` in the `result` object.
 
         new_forces = diff.body.integrate_pressure(new_pressure)
+        #print(new_forces)
         
 
         if not keep_details:
             results = diff.make_results_container(new_forces)
         else:
             results = diff.make_results_container(new_forces, diff_res.sources, potential, new_pressure)
+
+       
             
-        added_mass = np.abs(new_forces['Heave'].real)
+        
+
+        dataset1 = cpt.assemble_dataset([rad_res])
+        added_mass = new_forces['Heave'].real
+        #added_mass = dataset1['added_mass'].sel(radiating_dof='Heave',influenced_dof='Heave')
+
+        print(f"added_mass compare==========================>{added_mass} and {dataset1['added_mass'].sel(radiating_dof='Heave',influenced_dof='Heave')} ")
+       
         
         damping = np.abs(new_forces['Heave'].imag) * diff.omega #abs because damping should be positive? does not make sense
+        #damping = dataset1['radiation_damping'].sel(radiating_dof='Heave',influenced_dof='Heave')
         return new_forces, {'added_mass':added_mass}, {'damping':damping}
 
     # ============================================ #
@@ -101,7 +117,7 @@ def run(bodies,xyzees,rho,omega):
     wave_num =  1.0/9.81
 
     N_bodies = len(bodies)
-    max_iteration = 2*N_bodies #(dead or alive lol)
+    max_iteration = N_bodies #(dead or alive lol)
 
     # body_potential_at_neighbors = {body:(dict(zip(body_neighbors_locs[body], 
     #                                       airy_waves_potential(np.array(body_neighbors_locs[body]),diff_problems[body])))) for body in bodies}
@@ -128,13 +144,25 @@ def run(bodies,xyzees,rho,omega):
                                           omega=omega) for body in bodies}
 
     diff_results = {body:solver.solve(problem) for body,problem in diff_problems.items()}
+
     rad_results = {body:solver.solve(problem) for body,problem in rad_problems.items()}
+
+
+
+#assembling added mass individually
+
+   # added_mass = {body: cpt.assemble_dataset([res])['added_mass'].sel(radiating_dof='Heave',influenced_dof='Heave') for body,res in rad_results.items()}
+   
+   
+
 
     body_neighbors_locs = {body:neighbors.get(loc_bodies.get(body)) for body in bodies}
 
     body_potential_at_neighbors = {body:{nbros : airy_waves_potential(np.array(body_neighbors_locs[body]),diff_problems[body])
                                                   for nbros in neighbors} for xyz,body in loc_to_body.items()}
 
+
+   # print(body_potential_at_neighbors)
     all_other_phi_each_loc = {xyz:{loc_bodies.get(d):k.get(xyz,0) for d,k in body_potential_at_neighbors.items()} for xyz in xyzees}
 
 
@@ -144,8 +172,10 @@ def run(bodies,xyzees,rho,omega):
     phi_starj = {xyz:{nbros:phi_j_star(all_other_phi_each_loc[xyz][nbros],thetas[xyz][nbros],nbros,xyz,z,wave_num) for nbros in neighbors} for xyz in xyzees}
 
     new_excitation = get_phistarj_sum(phi_starj,xyzees)
+    
     body_potential_at_neighbors = {body:{nbros : airy_waves_potential(np.array(body_neighbors_locs[body]),diff_problems[body])
                                                   for nbros in neighbors} for xyz,body in loc_to_body.items()}
+    
     iterate = 0
     while iterate<max_iteration:
         # def get_all_other_phi(body_potential_at_neighbors):
@@ -156,13 +186,14 @@ def run(bodies,xyzees,rho,omega):
 
         new_excitation = get_phistarj_sum(phi_starj,xyzees)
         # look at the new excitation amplitude and reject if the amplitude is bigger than the last two
+        print("\n")
+        print(f"excitation for {iterate}")
+        print(new_excitation)
+        print("\n")
 
-    #     print(f"excitation for {iterate}")
-    #     print("\n")
 
-
-        if iterate==1:
-            body_potential_at_neighbors = {body:{nbros : airy_waves_potential(np.array(body_neighbors_locs[body]),diff_problems[body])+ phi_j_star(new_excitation[xyz],thetas[loc_bodies[body]][nbros],nbros,xyz,z,wave_num) 
+        if iterate==0:
+            body_potential_at_neighbors = {body:{nbros : airy_waves_potential(np.array(body_neighbors_locs[body]),diff_problems[body]) 
                                               for nbros in neighbors} for xyz,body in loc_to_body.items()}
         else:
             body_potential_at_neighbors = {body:{nbros : phi_j_star(new_excitation[xyz],thetas[loc_bodies[body]][nbros],nbros,xyz,z,wave_num) 
@@ -172,6 +203,10 @@ def run(bodies,xyzees,rho,omega):
         iterate+=1
 
     new_potential = get_phistarj_sum(phi_starj,xyzees)
+  
 
-    new_results = {loc_to_body.get(loc):solve(diff_prob,diff_results[loc_to_body.get(loc)],rad_results[loc_to_body.get(loc)], sum(new_potential[loc])) for loc,diff_prob in loc_diff.items()}
+
+
+    new_results = {loc_to_body.get(loc):solve(diff_prob,diff_results[loc_to_body.get(loc)],rad_results[loc_to_body.get(loc)], np.sum(new_potential[loc])) for loc,diff_prob in loc_diff.items()}
+    print("exiting pwa_func")
     return new_results

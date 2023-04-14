@@ -45,7 +45,6 @@ def power_module(P_signal,bodies,OEE):#AC to DC conversion at power bank
     #TODO: add losses at volatage step up and transmission to shore.
     p_sig = [p_sig[0] for p_sig in P_signal.values()]
     eff=power_out/(np.sum(p_sig))
-    print(power_out)
     return power_out, eff
 
 

@@ -4,7 +4,9 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 # import model for what you want to do...
-import modules.n2.model_2WECs as model
+#import modules.n2.model_2WECs as model
+
+import modules.model_4WECs as model
 
 '''def distance_check(wecx,wecy,r):
     n = len(wecx)
@@ -50,9 +52,9 @@ def gradient_method(x0,p,bnds,opt):     #   Gradient Method Search Algorithm
     def callback(x,p):
         fobj = objective1(x,p)
         history.append(fobj)
-    res = scipy_opt.minimize(objective1, x0, method='nelder-mead', args=p, bounds=bnds, options=opt,callback = callback)
+    res = scipy_opt.minimize(objective1, x0, method='slsqp', args=p, bounds=bnds, options=opt)
     print("The values at each iteration")
-    print(history)
+    
     plt.plot(range(len(history)),history)
     plt.show()
     plt.savefig('convergence.png')

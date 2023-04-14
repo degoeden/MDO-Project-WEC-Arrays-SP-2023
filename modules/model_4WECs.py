@@ -12,6 +12,7 @@ import modules.hydrostatics as hydrostatics
 
 def run(x,p):
     nWEC = p[3]
+    print(f"The numbe rof WEC is {nWEC}")
   
     # Unpack Design Variables
     wec_radius = x[0]
@@ -34,6 +35,7 @@ def run(x,p):
     # Geometry and Hydro Modules
     bodies,xyzees = geom.run(wec_radius,wecx,wecy)      #   Get bodies
     pwa_results = pwa.run(bodies,xyzees,rho_wec,omega)  #   PWSLAY
+  #  np.savetxt('pwa_results.txt',pwa_results)
     FK,Cs = hydrostatics.run(bodies,omega)            #   Hydrostatic Restoring Coefficients
 
     pwaF = {body:[] for body in bodies}
