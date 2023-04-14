@@ -25,18 +25,28 @@ def run(bodies,xyzees,rho,omega):
         return theta
 
 
-    #step 2
-    def phi_j_star(phi_ij,theta,X,Y,z,k):
 
-        '''phi_ij is the vector of all the effect at that body from all other bodies'''
+    def phi_ij(pot,omega,x,y,k,theta):
+        amplitude = -1*pot *(1/(-1j * 10*np.exp(k*(z + 1j(x*np.cos(theta) + y*np.sin(theta))))))
+        return amplitude
+
+
+    #step 2
+    def phi_j_star(phi_ij,theta,X,Y,z,k,iterate):
+
+        '''phi_ij is the vector of the effect at that i body from j body'''
         x,y = X[0],X[1]
         xj,yj = Y[0],Y[1]
+       # phi_ij = (phi_ij,omega,x,y,k,theta)
         if x==xj and y==yj:
             return 0
         multiplier = np.exp((1j*k*((x-xj))*np.cos(theta)) + (((y-yj))*np.sin(theta)))
+        if iterate==0:
+            pot = phi_ij * multiplier #kz = 0 #e^kz = 1 #takes phi_ij =1 
+        else:
+            pot = phi_ij/multiplier #return amplitude only
 
-        res = phi_ij * multiplier #kz = 0 #e^kz = 1
-        return res
+        return pot
 
     #{(10, 10, 0): {(10, 10, 0): 0,
       #(0, 0, 0): (8.415476709952118-2.9519008598532284j),
@@ -59,6 +69,9 @@ def run(bodies,xyzees,rho,omega):
         xyz_phi = {k:sum(v) for k,v in xyz_phi.items()}
        
         return xyz_phi
+
+
+
 
 
     def solve(diff,diff_res, rad_res,new_potential,keep_details=True):
@@ -117,7 +130,7 @@ def run(bodies,xyzees,rho,omega):
     wave_num =  1.0/9.81
 
     N_bodies = len(bodies)
-    max_iteration = N_bodies/2 #(dead or alive lol)
+    max_iteration = 1 #(dead or alive lol)
 
     # body_potential_at_neighbors = {body:(dict(zip(body_neighbors_locs[body], 
     #                                       airy_waves_potential(np.array(body_neighbors_locs[body]),diff_problems[body])))) for body in bodies}
@@ -162,41 +175,36 @@ def run(bodies,xyzees,rho,omega):
                                                   for nbros in neighbors} for xyz,body in loc_to_body.items()}
 
 
-   # print(body_potential_at_neighbors)
+    
     all_other_phi_each_loc = {xyz:{loc_bodies.get(d):k.get(xyz,0) for d,k in body_potential_at_neighbors.items()} for xyz in xyzees}
 
 
     thetas = {k:{s:theta_ij(k,s) for s,m in v.items()} for k,v in all_other_phi_each_loc.items()}
 
     z = 0
-    phi_starj = {xyz:{nbros:phi_j_star(all_other_phi_each_loc[xyz][nbros],thetas[xyz][nbros],nbros,xyz,z,wave_num) for nbros in neighbors} for xyz in xyzees}
+    #phi_starj = {xyz:{nbros:phi_j_star(all_other_phi_each_loc[xyz][nbros],thetas[xyz][nbros],nbros,xyz,z,wave_num,omega) for nbros in neighbors} for xyz in xyzees}
 
-    new_excitation = get_phistarj_sum(phi_starj,xyzees)
+    #new_excitation = get_phistarj_sum(phi_starj,xyzees)
     
-    body_potential_at_neighbors = {body:{nbros : airy_waves_potential(np.array(body_neighbors_locs[body]),diff_problems[body])
-                                                  for nbros in neighbors} for xyz,body in loc_to_body.items()}
+    body_amplitude_at_neighbors = {body:{nbros : 1.0 for nbros in neighbors} for xyz,body in loc_to_body.items()}
     
     iterate = 0
     while iterate<max_iteration:
         # def get_all_other_phi(body_potential_at_neighbors):
-        all_other_phi_each_loc = {xyz:{loc_bodies.get(d):k.get(xyz,0) for d,k in body_potential_at_neighbors.items()} for xyz in xyzees}
+        all_other_phi_each_loc = {xyz:{loc_bodies.get(d):k.get(xyz,0) for d,k in body_amplitude_at_neighbors.items()} for xyz in xyzees}
        # print(all_other_phi_each_loc)
         thetas = {k:{s:theta_ij(k,s) for s,m in v.items()} for k,v in all_other_phi_each_loc.items()}
-        phi_starj = {xyz:{nbros:phi_j_star(all_other_phi_each_loc[xyz][nbros],thetas[xyz][nbros],nbros,xyz,z,wave_num) for nbros in neighbors} for xyz in xyzees}
+        phi_starj = {xyz:{nbros:phi_j_star(all_other_phi_each_loc[xyz][nbros],thetas[xyz][nbros],nbros,xyz,z,wave_num,iterate) for nbros in neighbors} for xyz in xyzees}
 
         new_excitation = get_phistarj_sum(phi_starj,xyzees)
         # look at the new excitation amplitude and reject if the amplitude is bigger than the last two
-        print("\n")
-        print(f"excitation for {iterate}")
-        print(new_excitation)
-        print("\n")
+        # print("\n")
+        # print(f"excitation for {iterate}")
+        # print(new_excitation)
+        # print("\n")
 
 
-        if iterate==0:
-            body_potential_at_neighbors = {body:{nbros : airy_waves_potential(np.array(body_neighbors_locs[body]),diff_problems[body]) 
-                                              for nbros in neighbors} for xyz,body in loc_to_body.items()}
-        else:
-            body_potential_at_neighbors = {body:{nbros : phi_j_star(new_excitation[xyz],thetas[loc_bodies[body]][nbros],nbros,xyz,z,wave_num) 
+        body_amplitude_at_neighbors = {body:{nbros : phi_j_star(new_excitation[xyz],thetas[loc_bodies[body]][nbros],nbros,xyz,z,wave_num,iterate) 
                                               for nbros in neighbors} for xyz,body in loc_to_body.items()}
        # print(new_excitation)
 
