@@ -1,11 +1,11 @@
-import modules.model_4WECs as model
+import modules.model_nWECs as model
 import numpy as np
-nwec = 4 
+nwec = 5 
 # Design Vector
 r = 5
-wecx = [0, 10*r, 20*r, 30*r]
-wecy = [0, 0, 0, 0]
-d = [1e5, 1e5, 1e5, 1e5]
+wecx = [0, 10*r, 20*r, 30*r, 40*r]
+wecy = [0, 0, 0, 0, 0]
+d = [1e5, 1e5, 1e5, 1e5, 1e5]
 x = np.zeros(1+3*nwec)
 x[0] = r
 for i in range(nwec):
@@ -16,7 +16,7 @@ for i in range(nwec):
 omega = 1.047
 A = 1.5
 rho_wec = 850
-p = [omega,A,rho_wec,4]
+p = [omega,A,rho_wec,nwec]
 Power_out,efficiency,LCOE = model.run(x,p)
 print("Power out: ", Power_out)
 print("Efficiency: ", efficiency)

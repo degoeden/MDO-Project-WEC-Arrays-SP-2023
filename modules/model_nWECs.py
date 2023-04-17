@@ -36,17 +36,9 @@ def run(x,p):
     bodies,xyzees = geom.run(wec_radius,wecx,wecy)      #   Get bodies
     pwa_results = pwa.run(bodies,xyzees,rho_wec,omega)  #   PWSLAY
   #  np.savetxt('pwa_results.txt',pwa_results)
-    FK,Cs = hydrostatics.run(bodies,omega)            #   Hydrostatic Restoring Coefficients
+    FK,hydro_restore = hydrostatics.run(bodies,omega)   #   Hydrostatic Restoring Coefficients and Froude-Krylov Force
 
-    pwaF = {body:[] for body in bodies}
-    As = {body:[] for body in bodies}
-    Bs = {body:[] for body in bodies}
-    for body in bodies:
-        pwaF[body].append(pwa_results[body][0]['Heave'])
-        As[body].append(pwa_results[body][1]['added_mass'])
-        Bs[body].append(pwa_results[body][2]['damping'])
-
-
+    # Put PTO damping into body array format
     dampy = {body:[] for body in bodies}
     i = 0
     for body in bodies:
@@ -54,12 +46,12 @@ def run(x,p):
         i = i + 1
     
     # Dynamics and Controls Modules
-    power_indv = {body:[] for body in bodies} #   Each WEC's power out
+    power_indv = {body:[] for body in bodies}   #   Each WEC's power out
     for body in bodies:
-        A = As[body][0]
-        B = Bs[body][0]
-        C = Cs[body][0]
-        F = FK[body][0] + pwaF[body][0]
+        A = pwa_results[body][1]['added_mass']  # Added mass from PWA
+        B = pwa_results[body][2]['damping']     # Damping from PWA
+        C = hydro_restore[body][0]              # Hydrostatic Resoring Coefficient from hydro statics module
+        F = FK[body][0] + pwa_results[body][0]['Heave'] # Total force: Foude Krylov from hydro statics, others from PWA
         #print(f"For body {body}")
         #print(f"Added mass {A} & Damp {B} & Force {F} & Stif {C}")
         XI,stif = wec_dyn(omega,F,A,B,C,m,dampy[body])    #   Heave motion RAO   

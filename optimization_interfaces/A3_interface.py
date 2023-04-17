@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 # import model for what you want to do...
 #import modules.n2.model_2WECs as model
 
-import modules.model_4WECs as model
+import modules.model_nWECs as model
 
 '''def distance_check(wecx,wecy,r):
     n = len(wecx)
