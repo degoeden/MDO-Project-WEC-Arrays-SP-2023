@@ -1,10 +1,10 @@
 import modules.model_nWECs as model
 import numpy as np
-nwec = 5 
+nwec = 4
 # Design Vector
 r = 5
-wecx = [0, 10*r, 20*r, 30*r, 40*r]
-wecy = [0, 0, 0, 0, 0]
+wecx = [0, 0, 0, 0]
+wecy = [0, 10*r, 20*r, 30*r]
 d = [1e5, 1e5, 1e5, 1e5, 1e5]
 x = np.zeros(1+3*nwec)
 x[0] = r

@@ -27,7 +27,7 @@ def run(bodies,xyzees,rho,omega):
 
 
     def phi_ij(pot,omega,x,y,k,theta):
-        amplitude = -1*pot *(1/(-1j * 10*np.exp(k*(z + 1j(x*np.cos(theta) + y*np.sin(theta))))))
+        amplitude = -1*pot *(1/(-1j * 10*np.exp(k*(z + 1j*(x*np.cos(theta) + y*np.sin(theta))))))
         return amplitude
 
 
@@ -40,7 +40,8 @@ def run(bodies,xyzees,rho,omega):
        # phi_ij = (phi_ij,omega,x,y,k,theta)
         if x==xj and y==yj:
             return 0
-        multiplier = np.exp((1j*k*((x-xj))*np.cos(theta)) + (((y-yj))*np.sin(theta)))
+        multiplier = np.exp(1j*k*(((x-xj))*np.cos(theta) + (y-yj)*np.sin(theta)))
+     #   print(f"th emnultiplier: {multiplier}")
         if iterate==0:
             pot = phi_ij * multiplier #kz = 0 #e^kz = 1 #takes phi_ij =1 
         else:
@@ -130,7 +131,7 @@ def run(bodies,xyzees,rho,omega):
     wave_num =  1.0/9.81
 
     N_bodies = len(bodies)
-    max_iteration = 1 #(dead or alive lol)
+    max_iteration = N_bodies #(dead or alive lol)
 
     # body_potential_at_neighbors = {body:(dict(zip(body_neighbors_locs[body], 
     #                                       airy_waves_potential(np.array(body_neighbors_locs[body]),diff_problems[body])))) for body in bodies}
@@ -192,16 +193,17 @@ def run(bodies,xyzees,rho,omega):
     while iterate<max_iteration:
         # def get_all_other_phi(body_potential_at_neighbors):
         all_other_phi_each_loc = {xyz:{loc_bodies.get(d):k.get(xyz,0) for d,k in body_amplitude_at_neighbors.items()} for xyz in xyzees}
-       # print(all_other_phi_each_loc)
+        #print(all_other_phi_each_loc)
         thetas = {k:{s:theta_ij(k,s) for s,m in v.items()} for k,v in all_other_phi_each_loc.items()}
         phi_starj = {xyz:{nbros:phi_j_star(all_other_phi_each_loc[xyz][nbros],thetas[xyz][nbros],nbros,xyz,z,wave_num,iterate) for nbros in neighbors} for xyz in xyzees}
+        #print(phi_starj)
 
         new_excitation = get_phistarj_sum(phi_starj,xyzees)
-        # look at the new excitation amplitude and reject if the amplitude is bigger than the last two
-        # print("\n")
-        # print(f"excitation for {iterate}")
-        # print(new_excitation)
-        # print("\n")
+       # # look at the new excitation amplitude and reject if the amplitude is bigger than the last two
+       #  print("\n")
+       #  print(f"excitation for {iterate}")
+       #  print(new_excitation)
+       #  print("\n")
 
 
         body_amplitude_at_neighbors = {body:{nbros : phi_j_star(new_excitation[xyz],thetas[loc_bodies[body]][nbros],nbros,xyz,z,wave_num,iterate) 

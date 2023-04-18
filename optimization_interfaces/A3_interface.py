@@ -55,9 +55,7 @@ def gradient_method(x0,p,bnds,opt):     #   Gradient Method Search Algorithm
     res = scipy_opt.minimize(objective1, x0, method='slsqp', args=p, bounds=bnds, options=opt)
     print("The values at each iteration")
     
-    plt.plot(range(len(history)),history)
-    plt.show()
-    plt.savefig('convergence.png')
+
     return res.x
 
 def heuristic_method(p,bnds,opt):       #   GA method search algorithm
