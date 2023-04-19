@@ -82,27 +82,36 @@ def run(size,Power,bodies):
     Vol_WEC=nWEC*np.pi*rWEC**3*4/3
 
     Cbase=20*10*6+(Vol_WEC)*1000 #capital cost will scale with WEC volume
-    Cbase = 20*10*6+(Vol_WEC)*100000 # I added some extra zeros
+    Cbase = 20*10**6+(Vol_WEC)*100000 # I added some extra zeros and is it not supossed to be 10**6?
     CA=0.1 # $/W cost per capacity to construct
     DA=2*10**6 # cost to decomission
-    MA=10*6 # $/yr 
+    MA=10*6 # $/yr
+    MA = 10**6 # did you mean this? 
 
-    MV=10 # $M/MWhr/yr
+    MV=10 # $M/MWhr/yr I dont understand units
     r=0.08 # discount rate
     hr=8760 # hr/yr
     OEE=0.7 # Uptime
     p_sig = [p_sig[0] for p_sig in Power.values()]
     P = np.sum(p_sig)
     print(f'Power is: {P/1e6} MW')
-    cap=(Cbase+MA+(MV*np.log10(P)))/(1+r)**(1)
+    cap=(Cbase+MA+(MV*np.log10(P)))/(1+r)**(1) # why are we logging?
     for i in range(t-1):
         cap = cap + ((MA+MV*np.log10(P))/((1+r)**(i+2))) #/(P/(1+r)**(i+1))
         #print(LCOE)
 
     decomish=DA/(1+r)**t
     cap=cap+decomish
-    Enet=P*t*hr*OEE
 
+    # Extra Stuff OV and ND added to make numbers better ;)
+    cap = cap + CA*P # you never used CA
+    intsal_cost = 3e6
+    cap = cap + intsal_cost*nWEC
+    transmission_efficiency = 0.8
+    motor_efficiency = 0.6
+
+
+    Enet=P*t*hr*OEE*transmission_efficiency*motor_efficiency
     LCOE=cap/Enet
     
     return Enet, LCOE

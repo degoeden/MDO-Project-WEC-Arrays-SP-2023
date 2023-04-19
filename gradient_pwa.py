@@ -7,8 +7,8 @@ import numpy as np
 nwec = 4
 # Initial Design Vector
 r = 5
-wecx = [0, 0, 0, 0]
 wecy = [0, 10*r, 20*r, 30*r]
+wecx = [0, 0, 0, 0]
 d0 = 1e4
 damp = [d0, d0, d0, d0]
 x0 = np.zeros(1+3*nwec)

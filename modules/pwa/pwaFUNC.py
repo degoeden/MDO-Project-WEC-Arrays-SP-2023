@@ -3,7 +3,7 @@ import capytaine as cpt
 import numpy as np
 from capytaine.bem.airy_waves import airy_waves_potential, airy_waves_velocity, froude_krylov_force
 
-def run(bodies,xyzees,rho,omega):
+def run(bodies,xyzees,rho,omega,beta):
     print("entering pwa_func")
     
     def get_results(problems):
@@ -151,7 +151,7 @@ def run(bodies,xyzees,rho,omega):
 
 
     diff_problems = {body:cpt.DiffractionProblem(body=body, sea_bottom=-np.infty,
-                                          omega=omega, wave_direction=0.) for body in bodies}
+                                          omega=omega, wave_direction=beta) for body in bodies}
     loc_diff = {loc_bodies.get(body):diff for body,diff in diff_problems.items() }
 
     rad_problems = {body: cpt.RadiationProblem(body=body, sea_bottom=-np.infty,

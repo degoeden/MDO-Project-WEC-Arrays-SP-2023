@@ -35,10 +35,10 @@ def run(x,p):
     # Geometry and Hydro Modules
     bodies,xyzees = geom.run(wec_radius,wecx,wecy)      #   Get bodies
     print("after geometry")
-    
-    pwa_results = pwa.run(bodies,xyzees,1023.0,omega)  #   PWSLAY
+    beta = np.pi/2
+    pwa_results = pwa.run(bodies,xyzees,1023.0,omega,beta)  #   PWSLAY
     #np.savetxt('pwa_results.txt',pwa_results)
-    FK,hydro_restore = hydrostatics.run(bodies,omega)   #   Hydrostatic Restoring Coefficients and Froude-Krylov Force
+    FK,hydro_restore = hydrostatics.run(bodies,omega,beta)   #   Hydrostatic Restoring Coefficients and Froude-Krylov Force
 
     # Put PTO damping into body array format
     dampy = {body:[] for body in bodies}

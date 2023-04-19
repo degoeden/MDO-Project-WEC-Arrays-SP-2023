@@ -28,7 +28,7 @@ def objective(x,*args):         #   Calculates LCOE
     if distance_check(wecx,wecy,x[0]):
         LCOE = np.Infinity
     else:'''
-    Power_out,efficiency,LCOE = model.run(x,p)  #   runs the model
+    Power_out,LCOE = model.run(x,p)  #   runs the model
     print(f"This is LCOE {LCOE}")
     return LCOE
 
@@ -43,7 +43,7 @@ def objective1(x,args):         #   Calculates LCOE
     if distance_check(wecx,wecy,x[0]):
         LCOE = np.Infinity
     else:'''
-    Power_out,efficiency,LCOE = model.run(x,p)  #   runs the model
+    Power_out,LCOE = model.run(x,p)  #   runs the model
     print(f"This is LCOE {LCOE}")
     return LCOE
 
