@@ -102,6 +102,7 @@ def run(bodies,xyzees,rho,omega,beta):
         # The correction is done in `store_force` in the `result` object.
 
         new_forces = diff.body.integrate_pressure(new_pressure)
+        # This never triggers
         if np.abs(new_forces['Heave']) > 1e8:
             new_forces['Heave'] = (1e8)**(1/2) + (1e8)**(1/2)*1j
             print('we at max force')

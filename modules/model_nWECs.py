@@ -50,6 +50,7 @@ def run(x,p):
     # Dynamics and Controls Modules
     power_indv = {body:[] for body in bodies}   #   Each WEC's power out
     for body in bodies:
+        # None of these trigger
         A = pwa_results[body][1]['added_mass']  # Added mass from PWA
         if A > 1e7:
             A = (1e7)**(1/2)
