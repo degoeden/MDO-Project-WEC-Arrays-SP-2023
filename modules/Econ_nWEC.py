@@ -64,7 +64,7 @@ def cost_module(n_WEC,size,eff):
 # Core Econ function to call from main
 
 def run(size,Power,bodies): 
-    #print('Running Econ module')
+    '''#print('Running Econ module')
     # Unpack variables: this will need to be editied to match order from main 
     n_WEC=len(bodies)
     lifetime=10#years
@@ -72,5 +72,37 @@ def run(size,Power,bodies):
     power_out,eff=power_module(Power,bodies,OEE)
     cap_costs_WEC, var_costs_WEC =cost_module(n_WEC,size,eff) #income from power generated
     LCOE=((var_costs_WEC*lifetime)+cap_costs_WEC)/(power_out/(10**3)*8760*OEE*lifetime)
-    # Cost of capital and LCOE
-    return power_out, eff, LCOE
+    # Cost of capital and LCOE'''
+    
+    t=10    # Why?
+
+    nWEC=len(bodies)
+    rWEC=size
+
+    Vol_WEC=nWEC*np.pi*rWEC**3*4/3
+
+    Cbase=20*10*6+(Vol_WEC)*1000 #capital cost will scale with WEC volume
+    Cbase = 20*10*6+(Vol_WEC)*100000 # I added some extra zeros
+    CA=0.1 # $/W cost per capacity to construct
+    DA=2*10**6 # cost to decomission
+    MA=10*6 # $/yr 
+
+    MV=10 # $M/MWhr/yr
+    r=0.08 # discount rate
+    hr=8760 # hr/yr
+    OEE=0.7 # Uptime
+    p_sig = [p_sig[0] for p_sig in Power.values()]
+    P = np.sum(p_sig)
+    print(f'Power is: {P/1e6} MW')
+    cap=(Cbase+MA+(MV*np.log10(P)))/(1+r)**(1)
+    for i in range(t-1):
+        cap = cap + ((MA+MV*np.log10(P))/((1+r)**(i+2))) #/(P/(1+r)**(i+1))
+        #print(LCOE)
+
+    decomish=DA/(1+r)**t
+    cap=cap+decomish
+    Enet=P*t*hr*OEE
+
+    LCOE=cap/Enet
+    
+    return Enet, LCOE

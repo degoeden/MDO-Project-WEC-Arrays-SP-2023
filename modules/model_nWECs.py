@@ -60,6 +60,6 @@ def run(x,p):
         power_indv[body].append(time_avg_power(XI,dampy[body],omega,wave_amp))    #   Time Average Power captured
 
     # Power Transmission and Economics Module
-    Power_out,efficiency,LCOE = Econ.run(wec_radius,power_indv,bodies)
+    Power_out,LCOE = Econ.run(wec_radius,power_indv,bodies)
 
-    return Power_out,efficiency,LCOE
+    return Power_out,LCOE
