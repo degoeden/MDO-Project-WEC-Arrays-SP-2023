@@ -51,9 +51,21 @@ def run(x,p):
     power_indv = {body:[] for body in bodies}   #   Each WEC's power out
     for body in bodies:
         A = pwa_results[body][1]['added_mass']  # Added mass from PWA
+        if A > 1e7:
+            A = (1e7)**(1/2)
+            print('added mass TOO BIG')
         B = pwa_results[body][2]['damping']     # Damping from PWA
+        if B > 1e7:
+            B = (1e7)**(1/2)
+            print('damping TOO BIG')
         C = hydro_restore[body][0]              # Hydrostatic Resoring Coefficient from hydro statics module
+        if C > 1e7:
+            C = (1e7)**(1/2)
+            print('stiffness TOO BIG')
         F = FK[body][0] + pwa_results[body][0]['Heave'] # Total force: Foude Krylov from hydro statics, others from PWA
+        if F > 1e8:
+            F = (1e8)**(1/2) + (1e8)**(1/2)*1j
+            print('force TOO BIG')
         print(f"For body {body}")
         print(f"Added mass {A} & Damp {B} & Force {F} & Stif {C}")
         XI,stif = wec_dyn(omega,F,A,B,C,m,dampy[body])    #   Heave motion RAO   
