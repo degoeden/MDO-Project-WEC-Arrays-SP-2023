@@ -104,6 +104,7 @@ def run(bodies,xyzees,rho,omega,beta):
         new_forces = diff.body.integrate_pressure(new_pressure)
         if np.abs(new_forces['Heave']) > 1e8:
             new_forces['Heave'] = (1e8)**(1/2) + (1e8)**(1/2)*1j
+            print('we at max force')
         #
         
 
