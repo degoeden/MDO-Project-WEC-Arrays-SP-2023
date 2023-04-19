@@ -128,7 +128,7 @@ def run(bodies,xyzees,rho,omega):
     # ============================================ #
     # Where the actual code happens...             #
     # ============================================ #
-    wave_num =  1.0/9.81
+    wave_num =  (omega**2)/9.81
 
     N_bodies = len(bodies)
     max_iteration = N_bodies #(dead or alive lol)
@@ -214,9 +214,6 @@ def run(bodies,xyzees,rho,omega):
 
     new_potential = get_phistarj_sum(phi_starj,xyzees)
   
-
-
-
     new_results = {loc_to_body.get(loc):solve(diff_prob,diff_results[loc_to_body.get(loc)],rad_results[loc_to_body.get(loc)], np.sum(new_potential[loc])) for loc,diff_prob in loc_diff.items()}
     print("exiting pwa_func")
     return new_results
