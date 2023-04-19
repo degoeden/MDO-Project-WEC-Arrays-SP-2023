@@ -54,8 +54,8 @@ def run(x,p):
         B = pwa_results[body][2]['damping']     # Damping from PWA
         C = hydro_restore[body][0]              # Hydrostatic Resoring Coefficient from hydro statics module
         F = FK[body][0] + pwa_results[body][0]['Heave'] # Total force: Foude Krylov from hydro statics, others from PWA
-        #print(f"For body {body}")
-        #print(f"Added mass {A} & Damp {B} & Force {F} & Stif {C}")
+        print(f"For body {body}")
+        print(f"Added mass {A} & Damp {B} & Force {F} & Stif {C}")
         XI,stif = wec_dyn(omega,F,A,B,C,m,dampy[body])    #   Heave motion RAO   
         power_indv[body].append(time_avg_power(XI,dampy[body],omega,wave_amp))    #   Time Average Power captured
 
