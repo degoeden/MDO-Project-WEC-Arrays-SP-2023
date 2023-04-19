@@ -1,13 +1,16 @@
 # To run A3b code, import the A3 interface and run the desired A3 function: gradient_method or heuristic_method
 import optimization_interfaces.A3_interface as A3
 import numpy as np
+import matplotlib.pyplot as plt
 # ================================================================================= #
 #                                   Set-Up                                          #
 # ================================================================================= #
 nwec = 4
 # Initial Design Vector
 r = 5
-wecy = [0, 10*r, 20*r, 30*r]
+wecx = [0, 10*r, 20*r, 30*r]
+wecy = [0, 0, 0, 0]
+wecy = wecx
 wecx = [0, 0, 0, 0]
 d0 = 1e4
 damp = [d0, d0, d0, d0]
@@ -28,6 +31,8 @@ A = 1.5
 rho_wec = 850
 p = [omega,A,rho_wec,nwec]
 opt={'xatol': 1e-3, 'disp': True}  
+fig = plt.figure(1)
+plt.plot(wecx,wecy,linestyle='none',marker = 'o',markersize = r*2,color='y')
 # ================================================================================= #
 #                               Optimization Code                                   #
 # ================================================================================= #
@@ -35,3 +40,9 @@ opt={'xatol': 1e-3, 'disp': True}
 best = A3.gradient_method(x0,p,bnds,opt)    #   Gradient Optimization
 # ================================================================================= #
 print(best)
+r = best[0]
+for i in range(nwec):
+    wecx[i] = best[1+i*3]
+    wecy[i] = best[2+i*3]
+plt.plot(wecx,wecy,linestyle = 'none',marker = 'o',markersize = r*2,color='m')
+plt.show()
