@@ -102,9 +102,9 @@ def run(bodies,xyzees,rho,omega,beta):
         # The correction is done in `store_force` in the `result` object.
 
         new_forces = diff.body.integrate_pressure(new_pressure)
-        if np.abs(new_forces) > 1e8:
-            new_forces = (1e8)**(1/2) + (1e8)**(1/2)*1j
-        #print(new_forces)
+        if np.abs(new_forces['Heave']) > 1e8:
+            new_forces['Heave'] = (1e8)**(1/2) + (1e8)**(1/2)*1j
+        #
         
 
         if not keep_details:
