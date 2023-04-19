@@ -23,7 +23,7 @@ bnds = [[2,8],   # radius
         [-100*r,100*r],[-100*r,100*r],[0,1e7],   # wec 3
         [-100*r,100*r],[-100*r,100*r],[0,1e7]]   # wec 4
 # Parameters
-omega = 1.047
+omega = 0.785
 A = 1.5
 rho_wec = 850
 p = [omega,A,rho_wec,nwec]

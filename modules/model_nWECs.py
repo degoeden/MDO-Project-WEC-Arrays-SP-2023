@@ -35,7 +35,7 @@ def run(x,p):
     # Geometry and Hydro Modules
     bodies,xyzees = geom.run(wec_radius,wecx,wecy)      #   Get bodies
     print("after geometry")
-    beta = np.pi/2
+    beta = 0
     pwa_results = pwa.run(bodies,xyzees,1023.0,omega,beta)  #   PWSLAY
     #np.savetxt('pwa_results.txt',pwa_results)
     FK,hydro_restore = hydrostatics.run(bodies,omega,beta)   #   Hydrostatic Restoring Coefficients and Froude-Krylov Force
