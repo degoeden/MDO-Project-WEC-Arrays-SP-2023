@@ -2,7 +2,7 @@ import numpy as np
 
 # new econ mod ?
 
-def ECON(size,Power,bodies):
+def run(size,Power,bodies):
     nWEC = len(bodies)
     c_vol = 1500                        # [$/m^3] cost of WEC per unit volume (taken from pelamis WEC specs)
     rWEC = size
@@ -13,7 +13,9 @@ def ECON(size,Power,bodies):
     c_ship = 75000*nWEC                 # shipping cost of each WEC
     capex = cWEC + c_moor + c_install + c_ship    # total capital expenses
     
+
     t = 25                              # lifetime [years]
+    capex = capex/t
     main = 40000*nWEC                   # annual maintenance 
     refit = 40000*nWEC/t                # mid-life refit cost normalized to per yer
     decomish = 500000/t                 # decomissioning cost normalized to per year
@@ -28,4 +30,4 @@ def ECON(size,Power,bodies):
     FCR = 0.09                          # fixed charge rate (value for wind)
     LCOE = ((FCR*capex) + opex)/AEP     # levelized cost of energy
     print('da LCOE',LCOE)
-    return LCOE
+    return AEP, LCOE

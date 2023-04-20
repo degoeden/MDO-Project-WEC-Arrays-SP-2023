@@ -1,4 +1,4 @@
-import modules.Econ_nWEC as Econ
+import modules.ECON as Econ
 import modules.geometry as geom
 from modules.wec_dyn import wec_dyn as wec_dyn
 from modules.time_avg_power import time_avg_power as time_avg_power
