@@ -2,16 +2,17 @@
 import optimization_interfaces.A3_interface as A3
 import numpy as np
 import matplotlib.pyplot as plt
+import random as randy
 # ================================================================================= #
 #                                   Set-Up                                          #
 # ================================================================================= #
 nwec = 4
 # Initial Design Vector
 r = 5
-wecx = [0, 10*r, 20*r, 30*r]
+wecx = [0, randy.random()*200-100, randy.random()*200-100, randy.random()*200-100]
+wecy = [0, randy.random()*200-100, randy.random()*200-100, randy.random()*200-100]
+wecx = [0, 40, 80, 120]
 wecy = [0, 0, 0, 0]
-wecy = wecx
-#wecx = [0, 0, 0, 0]
 d0 = 1e4
 damp = [d0, d0, d0, d0]
 x0 = np.zeros(1+3*nwec)
@@ -26,11 +27,11 @@ bnds = [[2,8],   # radius
         [-100*r,100*r],[-100*r,100*r],[0,1e7],   # wec 3
         [-100*r,100*r],[-100*r,100*r],[0,1e7]]   # wec 4
 # Parameters
-omega = 0.785
+omega = 1.047
 A = 1.5
 rho_wec = 850
 p = [omega,A,rho_wec,nwec]
-opt={'xatol': 1e-3, 'disp': True}  
+opt={'xatol': 1e-5, 'disp': True}  
 fig = plt.figure(1)
 plt.plot(wecx,wecy,linestyle='none',marker = 'o',markersize = r*2,color='y')
 # ================================================================================= #

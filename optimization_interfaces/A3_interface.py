@@ -8,42 +8,44 @@ import matplotlib.pyplot as plt
 
 import modules.model_nWECs as model
 
-'''def distance_check(wecx,wecy,r):
+def distance_check(wecx,wecy,r):
     n = len(wecx)
+    d = []
     for i in range(n):
         for j in range(i+1,n):
-            d = ((wecx[i]-wecx[j])**2 + (wecy[i]-wecy[j])**2)**(1/2)
-            if d<10*r:
-                return True
-    return False'''
+            d.append(((wecx[i]-wecx[j])**2 + (wecy[i]-wecy[j])**2)**(1/2))
+    mind = min(d)
+    if mind<10*r:
+        return 10000*(10*r - mind)**2     
+    return 0
 
 def objective(x,*args):         #   Calculates LCOE
     p = args
-    '''nwec = p[3]
+    nwec = p[3]
+    r = x[0]
     wecx = np.zeros(nwec)
     wecy = np.zeros(nwec)
     for i in range(nwec):
         wecx[i] = x[1+i*3]
         wecy[i] = x[2+i*3]
-    if distance_check(wecx,wecy,x[0]):
-        LCOE = np.Infinity
-    else:'''
+
     Power_out,LCOE = model.run(x,p)  #   runs the model
+    LCOE = LCOE + distance_check(wecx,wecy,r)
     print(f"This is LCOE {LCOE}")
     return LCOE
 
 def objective1(x,args):         #   Calculates LCOE
     p = args
-    '''nwec = p[3]
+    nwec = p[3]
+    r = x[0]
     wecx = np.zeros(nwec)
     wecy = np.zeros(nwec)
     for i in range(nwec):
         wecx[i] = x[1+i*3]
         wecy[i] = x[2+i*3]
-    if distance_check(wecx,wecy,x[0]):
-        LCOE = np.Infinity
-    else:'''
+
     Power_out,LCOE = model.run(x,p)  #   runs the model
+    LCOE = LCOE + distance_check(wecx,wecy,r)
     print(f"This is LCOE {LCOE}")
     return LCOE
 
