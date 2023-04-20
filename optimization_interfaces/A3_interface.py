@@ -2,10 +2,6 @@
 import scipy.optimize as scipy_opt
 import numpy as np
 import matplotlib.pyplot as plt
-
-# import model for what you want to do...
-#import modules.n2.model_2WECs as model
-
 import modules.model_nWECs as model
 import modules.model_nWECs_fixr as model_fixr
 
@@ -94,12 +90,18 @@ def objective2(x,args):         #   Calculates LCOE
     maxd = maxd + distance_check(wecx,wecy,r)
     return maxd
 
+def objective3(x,args): # multi objective
+    J1 = objective1(x,args)
+    J2 = objective2(x,args)
+    J3 = 0.5*J1/0.02 + 0.5*J2/100
+    return J3
+
 def gradient_method(x0,p,bnds,opt):     #   Gradient Method Search Algorithm
     history = []
     def callback(x,p):
         fobj = objective1(x,p)
         history.append(fobj)
-    res = scipy_opt.minimize(objective2, x0, method='slsqp', args=p, bounds=bnds, options=opt)
+    res = scipy_opt.minimize(objective3, x0, method='slsqp', args=p, bounds=bnds, options=opt)
     print("The values at each iteration")
     return res.x
 
