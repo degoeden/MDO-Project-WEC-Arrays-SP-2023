@@ -49,4 +49,6 @@ for i in range(nwec-1):
     damp[i+1] = 10**best[3+i*3]
 print(damp)
 plt.plot(wecx,wecy,linestyle = 'none',marker = 'o',markersize = r*2,color='m')
+plt.xlim([-100,100])
+plt.ylim([-100,100])
 plt.show()
