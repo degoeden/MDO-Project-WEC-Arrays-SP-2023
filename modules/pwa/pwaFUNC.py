@@ -2,9 +2,10 @@
 import capytaine as cpt
 import numpy as np
 from capytaine.bem.airy_waves import airy_waves_potential, airy_waves_velocity, froude_krylov_force
-
+import scipy.integrate as scipy_int
+import shutup
 def run(bodies,xyzees,rho,omega,beta):
-    print("entering pwa_func")
+    #print("entering pwa_func")
     
     def get_results(problems):
         results = [solver.solve(pb, keep_details = True) for pb in problems]
@@ -95,34 +96,70 @@ def run(bodies,xyzees,rho,omega,beta):
         rad_pot = rad_res.potential
         potential =   new_potential + diff_pot + rad_pot
         
-        rho = 1000
+        rho = 1023
         new_pressure = rho * potential
         # Actually, for diffraction problems: pressure over jω
         #           for radiation problems:   pressure over -ω²
         # The correction is done in `store_force` in the `result` object.
 
         new_forces = diff.body.integrate_pressure(new_pressure)
-        # This never triggers
-        if np.abs(new_forces['Heave']) > 1e8:
-            new_forces['Heave'] = (1e8)**(1/2) + (1e8)**(1/2)*1j
-            print('we at max force')
-        #
+        #if np.abs(new_forces['Heave']) > 1e6:
+            #gam = 1e6/np.abs(new_forces['Heave'])
+            #new_forces['Heave'] = gam*new_forces['Heave'].real + gam*new_forces['Heave'].imag*1j
+            #print("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$@ND")
+            #print('we at MAX FORCE!!!!!!!!!!!')
+            #print(np.abs(new_forces['Heave']))
+            #print("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$@ND")
+        body = diff.body
+        #r = float(body.name.split('_')[2])
+        #a33 = lambda z: np.pi*rho*(r**2 - z**2)
+        #A33 = scipy_int.quad(a33,-r,0)[0]
+        #print("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$@ND")
+        #print(A33)
+        #print(new_forces['Heave'].real)
+        #print("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$@ND")
         
+        def inf_hydrodynamics(body,w,B):
+            #shutup.please()
+            solver = cpt.BEMSolver()
+            problems = [
+                cpt.DiffractionProblem(body=body, wave_direction=B, omega=w)
+                for dof in body.dofs]
+            problems += [
+                cpt.RadiationProblem(body=body, radiating_dof=dof)
+                for dof in body.dofs]
+            results = [solver.solve(pb,keep_details=(True)) for pb in sorted(problems)]
+            dataset = cpt.assemble_dataset(results)
+            a = dataset['added_mass'].sel(radiating_dof='Heave',
+                                            influenced_dof='Heave')        # added mass in heave
+            b = dataset['radiation_damping'].sel(radiating_dof='Heave',
+                                            influenced_dof='Heave')        # damping coeff in heave
+            #shutup.jk()
+            return a[0],b[0]
+        omega_inf = 1e3
 
+        Ainf,Binf = inf_hydrodynamics(body,omega_inf,beta)
+        #print(f"\n natural freq stuff {Ainf}           &&&              {Binf}")
+        if np.abs(new_forces['Heave'].real) > Ainf*2:
+            #print(f"BAD added mass {np.abs(new_forces['Heave'].real)}")
+            new_forces['Heave'] = (new_forces['Heave'].real/np.abs(new_forces['Heave'].real))*Ainf*2 + new_forces['Heave'].imag*1j
+            #print(f"this is Ainf: {Ainf}")
+            #print(f"we should do this...{new_forces['Heave']}")
+        if np.abs(new_forces['Heave'].imag) > (Binf/omega)*2:
+            #print(f"BAD damping {np.abs(new_forces['Heave'].imag)}")
+            new_forces['Heave'] = (new_forces['Heave'].imag/np.abs(new_forces['Heave'].imag))*Binf*2 + new_forces['Heave'].real
+            #print(f"This is Binf: {Binf}")
+            #print(f"we should do this...{new_forces['Heave']}")
         if not keep_details:
             results = diff.make_results_container(new_forces)
         else:
             results = diff.make_results_container(new_forces, diff_res.sources, potential, new_pressure)
 
-       
-            
-        
-
         dataset1 = cpt.assemble_dataset([rad_res])
         added_mass = np.abs(new_forces['Heave'].real)
         #added_mass = dataset1['added_mass'].sel(radiating_dof='Heave',influenced_dof='Heave')
 
-        print(f"added_mass compare==========================>{added_mass} and {dataset1['added_mass'].sel(radiating_dof='Heave',influenced_dof='Heave')} ")
+        #print(f"added_mass compare==========================>{added_mass} and {dataset1['added_mass'].sel(radiating_dof='Heave',influenced_dof='Heave')} ")
        
         
         damping = np.abs(new_forces['Heave'].imag) * diff.omega #abs because damping should be positive? does not make sense
@@ -219,5 +256,5 @@ def run(bodies,xyzees,rho,omega,beta):
     new_potential = get_phistarj_sum(phi_starj,xyzees)
   
     new_results = {loc_to_body.get(loc):solve(diff_prob,diff_results[loc_to_body.get(loc)],rad_results[loc_to_body.get(loc)], np.sum(new_potential[loc])) for loc,diff_prob in loc_diff.items()}
-    print("exiting pwa_func")
+    #print("exiting pwa_func")
     return new_results

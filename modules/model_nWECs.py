@@ -52,23 +52,22 @@ def run(x,p):
     for body in bodies:
         # None of these trigger
         A = pwa_results[body][1]['added_mass']  # Added mass from PWA
-        if A > 1e7:
-            A = (1e7)**(1/2)
-            print('added mass TOO BIG')
+        #print(f"The added mass is {A}")
+        '''if A > 5e5:
+            A = (5e6)
+            print('added mass TOO BIG')'''
         B = pwa_results[body][2]['damping']     # Damping from PWA
-        if B > 1e7:
-            B = (1e7)**(1/2)
-            print('damping TOO BIG')
+        '''if B > 5e6:
+            B = (5e6)
+            print('damping TOO BIG')'''
         C = hydro_restore[body][0]              # Hydrostatic Resoring Coefficient from hydro statics module
-        if C > 1e7:
+        '''if C > 1e7:
             C = (1e7)**(1/2)
-            print('stiffness TOO BIG')
+            print('stiffness TOO BIG')'''
         F = FK[body][0] + pwa_results[body][0]['Heave'] # Total force: Foude Krylov from hydro statics, others from PWA
-        if F > 1e8:
-            F = (1e8)**(1/2) + (1e8)**(1/2)*1j
-            print('force TOO BIG')
-        print(f"For body {body}")
-        print(f"Added mass {A} & Damp {B} & Force {F} & Stif {C}")
+        
+        #print(f"For body {body}")
+        #print(f"Added mass {A} & Damp {B} & Force {F} & Stif {C}")
         XI,stif = wec_dyn(omega,F,A,B,C,m,dampy[body])    #   Heave motion RAO   
         power_indv[body].append(time_avg_power(XI,dampy[body],omega,wave_amp))    #   Time Average Power captured
 

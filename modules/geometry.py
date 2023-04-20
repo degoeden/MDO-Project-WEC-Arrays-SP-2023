@@ -6,7 +6,7 @@ def run(r,wecx,wecy):
         body = cpt.FloatingBody(mesh1)
         body.add_translation_dof(name='Heave')
         body = body.immersed_part()
-        body.name = f'{x}_{y}_{0}'
+        body.name = f'{x}_{y}_{r}'
         return body
 
     bodies = []    
