@@ -18,15 +18,26 @@ def distance_check(wecx,wecy,r):
 
 def objective(x,*args):         #   Calculates LCOE
     p = args
-    nwec = p[3]
-    r = x[0]
-    wecx = np.zeros(nwec)
-    wecy = np.zeros(nwec)
-    for i in range(nwec):
-        wecx[i] = x[1+i*3]
-        wecy[i] = x[2+i*3]
+    if len(p)==4:
+        nwec = p[3]
+        r = x[0]
+        wecx = np.zeros(nwec)
+        wecy = np.zeros(nwec)
+        for i in range(nwec):
+            wecx[i] = x[1+i*3]
+            wecy[i] = x[2+i*3]
 
-    Power_out,LCOE = model.run(x,p)  #   runs the model
+        Power_out,LCOE = model.run(x,p)  #   runs the model
+    else:
+        nwec = p[3]
+        r = p[4]
+        wecx = np.zeros(nwec)
+        wecy = np.zeros(nwec)
+        for i in range(nwec-1):
+            wecx[i+1] = x[1+i*3]
+            wecy[i+1] = x[2+i*3]
+
+        Power_out,LCOE = model_fixr.run(x,p)  #   runs the model
     LCOE = LCOE + distance_check(wecx,wecy,r)
     print(f"This is LCOE {LCOE}")
     return LCOE

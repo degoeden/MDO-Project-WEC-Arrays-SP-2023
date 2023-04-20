@@ -25,7 +25,7 @@ def run(x,p):
         wecx[i+1] = x[1+i*3]
         wecy[i+1] = x[2+i*3]
         damp[i+1] = 10**x[3+i*3]
-    
+    print(f"Nate Look Here: {damp}")
     # Unpack Parameters
     omega = p[0]
     wave_amp = p[1]
@@ -83,6 +83,7 @@ def run(x,p):
         print(f"The force is: {F}")
         #print(f"For body {body}")
         #print(f"Added mass {A} & Damp {B} & Force {F} & Stif {C}")
+        print(f"NO NATE LOOK AT THIS: {dampy[body]}")
         XI,stif = wec_dyn(omega,F,A,B,C,m,dampy[body])    #   Heave motion RAO  
         print(f"the mag is: {abs(XI)}") 
         power_indv[body].append(time_avg_power(XI,dampy[body],omega,wave_amp))    #   Time Average Power captured
