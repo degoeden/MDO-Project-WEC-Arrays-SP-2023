@@ -147,9 +147,9 @@ def run(bodies,xyzees,rho,omega,beta):
             #print(f"we should do this...{new_forces['Heave']}")
         if np.abs(new_forces['Heave'].imag) > (Binf/omega)*2:
             #print(f"BAD damping {np.abs(new_forces['Heave'].imag)}")
-            new_forces['Heave'] = (new_forces['Heave'].imag/np.abs(new_forces['Heave'].imag))*Binf*2 + new_forces['Heave'].real
+            new_forces['Heave'] = (new_forces['Heave'].imag/np.abs(new_forces['Heave'].imag))*Binf*2j + new_forces['Heave'].real
             #print(f"This is Binf: {Binf}")
-            #print(f"we should do this...{new_forces['Heave']}")
+            #print(f"we should do this...{new_forces['Heave'].imag}")
         if not keep_details:
             results = diff.make_results_container(new_forces)
         else:

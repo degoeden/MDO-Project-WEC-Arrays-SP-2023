@@ -29,7 +29,7 @@ bnds = [#[2,8],   # radius
         [-100,100],[-100,100],[0,5]]   # wec 4
 # Parameters
 omega = 1.047
-A = 1.5
+A = 1
 rho_wec = 850
 p = [omega,A,rho_wec,nwec,r]
 opt={'xatol': 1e-5, 'disp': True}  
