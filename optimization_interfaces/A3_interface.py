@@ -16,8 +16,8 @@ def distance_check(wecx,wecy,r):
         for j in range(i+1,n):
             d.append(((wecx[i]-wecx[j])**2 + (wecy[i]-wecy[j])**2)**(1/2))
     mind = min(d)
-    if mind<5*r:
-        return 100*(5*r - mind)**2     
+    if mind<10*r:
+        return 10000*(10*r - mind)**2     
     return 0
 
 def objective(x,*args):         #   Calculates LCOE
@@ -61,12 +61,45 @@ def objective1(x,args):         #   Calculates LCOE
     print(f"This is LCOE {LCOE}")
     return LCOE
 
+def maximumD(wecx,wecy):
+    n = len(wecx)
+    d = []
+    for i in range(n):
+        for j in range(i+1,n):
+            d.append(((wecx[i]-wecx[j])**2 + (wecy[i]-wecy[j])**2)**(1/2))
+    maxd = max(d)    
+    return maxd
+
+def objective2(x,args):         #   Calculates LCOE
+    p = args
+    if len(p)==4:
+        nwec = p[3]
+        r = x[0]
+        wecx = np.zeros(nwec)
+        wecy = np.zeros(nwec)
+        for i in range(nwec):
+            wecx[i] = x[1+i*3]
+            wecy[i] = x[2+i*3]
+
+        Power_out,LCOE = model.run(x,p)  #   runs the model
+    else:
+        nwec = p[3]
+        r = p[4]
+        wecx = np.zeros(nwec)
+        wecy = np.zeros(nwec)
+        for i in range(nwec-1):
+            wecx[i+1] = x[1+i*3]
+            wecy[i+1] = x[2+i*3]
+    maxd = maximumD(wecx,wecy)
+    maxd = maxd + distance_check(wecx,wecy,r)
+    return maxd
+
 def gradient_method(x0,p,bnds,opt):     #   Gradient Method Search Algorithm
     history = []
     def callback(x,p):
         fobj = objective1(x,p)
         history.append(fobj)
-    res = scipy_opt.minimize(objective1, x0, method='slsqp', args=p, bounds=bnds, options=opt)
+    res = scipy_opt.minimize(objective2, x0, method='slsqp', args=p, bounds=bnds, options=opt)
     print("The values at each iteration")
     return res.x
 
