@@ -66,10 +66,11 @@ def run(x,p):
             C = (1e7)**(1/2)
             print('stiffness TOO BIG')'''
         F = FK[body][0] + pwa_results[body][0]['Heave'] # Total force: Foude Krylov from hydro statics, others from PWA
-        
+        print(f"The force is: {F}")
         #print(f"For body {body}")
         #print(f"Added mass {A} & Damp {B} & Force {F} & Stif {C}")
-        XI,stif = wec_dyn(omega,F,A,B,C,m,dampy[body])    #   Heave motion RAO   
+        XI,stif = wec_dyn(omega,F,A,B,C,m,dampy[body])    #   Heave motion RAO  
+        print(f"the mag is: {abs(XI)}") 
         power_indv[body].append(time_avg_power(XI,dampy[body],omega,wave_amp))    #   Time Average Power captured
 
     # Power Transmission and Economics Module

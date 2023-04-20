@@ -101,7 +101,7 @@ def gradient_method(x0,p,bnds,opt):     #   Gradient Method Search Algorithm
     def callback(x,p):
         fobj = objective1(x,p)
         history.append(fobj)
-    res = scipy_opt.minimize(objective3, x0, method='slsqp', args=p, bounds=bnds, options=opt)
+    res = scipy_opt.minimize(objective1, x0, method='slsqp', args=p, bounds=bnds, options=opt)
     print("The values at each iteration")
     return res.x
 
