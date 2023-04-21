@@ -40,9 +40,14 @@ def run(r,wave_direction,omega,x,y):
 
 
     # create array
-    array = body + body.translated((x[1],y[1],0),name='sph2') + body.translated((x[2],y[2],0),name='sph3') + body.translated((x[3],y[3],0),name='sph4')
+    array = (body + body.translated((x[1],y[1],0),name='sph2') + 
+             body.translated((x[2],y[2],0),name='sph3') + 
+             body.translated((x[3],y[3],0),name='sph4') + 
+             body.translated((x[4],y[4],0),name='sph5') +
+             body.translated((x[5],y[5],0),name='sph6') +
+             body.translated((x[6],y[6],0),name='sph7'))
     array.add_all_rigid_body_dofs()
-    array.keep_only_dofs(dofs=['sph__Heave','sph2__Heave','sph3__Heave','sph4__Heave'])
+    array.keep_only_dofs(dofs=['sph__Heave','sph2__Heave','sph3__Heave','sph4__Heave','sph5__Heave','sph6__Heave','sph7__Heave'])
 
     # hydrostatics
     hsd = hs.Hydrostatics(mm.Mesh(array.mesh.vertices, array.mesh.faces)).hs_data
@@ -76,43 +81,61 @@ def run(r,wave_direction,omega,x,y):
                                         influenced_dof=['sph3__Heave']))]
     B += [(dataset['radiation_damping'].sel(radiating_dof=['sph4__Heave'],
                                         influenced_dof=['sph4__Heave']))]
+    B += [(dataset['radiation_damping'].sel(radiating_dof=['sph5__Heave'],
+                                        influenced_dof=['sph5__Heave']))]
+    B += [(dataset['radiation_damping'].sel(radiating_dof=['sph6__Heave'],
+                                        influenced_dof=['sph6__Heave']))]
+    B += [(dataset['radiation_damping'].sel(radiating_dof=['sph7__Heave'],
+                                        influenced_dof=['sph7__Heave']))]
     B = np.array(B)
     print('damping',B)
 
     # added mass
-    A1 = np.array(dataset['added_mass'].sel(radiating_dof=['sph__Heave'],
-                                        influenced_dof=['sph__Heave']))
-    A2 = np.array(dataset['added_mass'].sel(radiating_dof=['sph2__Heave'],
-                                        influenced_dof=['sph2__Heave']))
-    A3 = np.array(dataset['added_mass'].sel(radiating_dof=['sph3__Heave'],
-                                        influenced_dof=['sph3__Heave']))
-    A4 = np.array(dataset['added_mass'].sel(radiating_dof=['sph4__Heave'],
-                                        influenced_dof=['sph4__Heave']))
-    A = np.array([A1, A2, A3, A4])
+    A = [(dataset['added_mass'].sel(radiating_dof=['sph__Heave'],
+                                        influenced_dof=['sph__Heave']))]
+    A += [(dataset['added_mass'].sel(radiating_dof=['sph2__Heave'],
+                                        influenced_dof=['sph2__Heave']))]
+    A += [(dataset['added_mass'].sel(radiating_dof=['sph3__Heave'],
+                                        influenced_dof=['sph3__Heave']))]
+    A += [(dataset['added_mass'].sel(radiating_dof=['sph4__Heave'],
+                                        influenced_dof=['sph4__Heave']))]
+    A += [(dataset['added_mass'].sel(radiating_dof=['sph5__Heave'],
+                                        influenced_dof=['sph5__Heave']))]
+    A += [(dataset['added_mass'].sel(radiating_dof=['sph6__Heave'],
+                                        influenced_dof=['sph6__Heave']))]
+    A += [(dataset['added_mass'].sel(radiating_dof=['sph7__Heave'],
+                                        influenced_dof=['sph7__Heave']))]
+    A = np.array(A)
     print('added mass',A)
 
     # hydrostatic stiffness
-    C1 = np.array(dataset['hydrostatic_stiffness'].sel(radiating_dof=['sph__Heave'],
-                                        influenced_dof=['sph__Heave']))
-    C2 = np.array(dataset['hydrostatic_stiffness'].sel(radiating_dof=['sph2__Heave'],
-                                        influenced_dof=['sph2__Heave']))
-    C3 = np.array(dataset['hydrostatic_stiffness'].sel(radiating_dof=['sph3__Heave'],
-                                        influenced_dof=['sph3__Heave']))
-    C4 = np.array(dataset['hydrostatic_stiffness'].sel(radiating_dof=['sph4__Heave'],
-                                        influenced_dof=['sph4__Heave']))
-    C = np.array([C1, C2, C3, C4])
-    #print('stiffness',K)
+    C = [(dataset['hydrostatic_stiffness'].sel(radiating_dof=['sph__Heave'],
+                                        influenced_dof=['sph__Heave']))]
+    C += [(dataset['hydrostatic_stiffness'].sel(radiating_dof=['sph2__Heave'],
+                                        influenced_dof=['sph2__Heave']))]
+    C += [(dataset['hydrostatic_stiffness'].sel(radiating_dof=['sph3__Heave'],
+                                        influenced_dof=['sph3__Heave']))]
+    C += [(dataset['hydrostatic_stiffness'].sel(radiating_dof=['sph4__Heave'],
+                                        influenced_dof=['sph4__Heave']))]
+    C += [(dataset['hydrostatic_stiffness'].sel(radiating_dof=['sph5__Heave'],
+                                        influenced_dof=['sph5__Heave']))]
+    C += [(dataset['hydrostatic_stiffness'].sel(radiating_dof=['sph6__Heave'],
+                                        influenced_dof=['sph6__Heave']))]
+    C += [(dataset['hydrostatic_stiffness'].sel(radiating_dof=['sph7__Heave'],
+                                        influenced_dof=['sph7__Heave']))]
+    C = np.array(C)
+    #print('stiffness',C)
 
     # inertia matrix
-    M1 = np.array(dataset['inertia_matrix'].sel(radiating_dof=['sph__Heave'],
-                                        influenced_dof=['sph__Heave']))
-    M2 = np.array(dataset['inertia_matrix'].sel(radiating_dof=['sph2__Heave'],
-                                        influenced_dof=['sph2__Heave']))
-    M3 = np.array(dataset['inertia_matrix'].sel(radiating_dof=['sph3__Heave'],
-                                        influenced_dof=['sph3__Heave']))
-    M4 = np.array(dataset['inertia_matrix'].sel(radiating_dof=['sph4__Heave'],
-                                        influenced_dof=['sph4__Heave']))
-    m = np.array([M1, M2, M3, M4])
+    M = [(dataset['inertia_matrix'].sel(radiating_dof=['sph__Heave'],
+                                        influenced_dof=['sph__Heave']))]
+    M += [(dataset['inertia_matrix'].sel(radiating_dof=['sph2__Heave'],
+                                        influenced_dof=['sph2__Heave']))]
+    M += [(dataset['inertia_matrix'].sel(radiating_dof=['sph3__Heave'],
+                                        influenced_dof=['sph3__Heave']))]
+    M += [(dataset['inertia_matrix'].sel(radiating_dof=['sph4__Heave'],
+                                        influenced_dof=['sph4__Heave']))]
+    m = np.array(M)
     #print('mass',m)
 
 
@@ -121,6 +144,9 @@ def run(r,wave_direction,omega,x,y):
     FK += [froude_krylov_force(diff_prob)['sph2__Heave']]
     FK += [froude_krylov_force(diff_prob)['sph3__Heave']]
     FK += [froude_krylov_force(diff_prob)['sph4__Heave']]
+    FK += [froude_krylov_force(diff_prob)['sph5__Heave']]
+    FK += [froude_krylov_force(diff_prob)['sph6__Heave']]
+    FK += [froude_krylov_force(diff_prob)['sph7__Heave']]
     #print('froude_krylov',FK)
     FK = np.array(FK)
 
@@ -128,6 +154,9 @@ def run(r,wave_direction,omega,x,y):
     dif += [diff_result.forces['sph2__Heave']]
     dif += [diff_result.forces['sph3__Heave']]
     dif += [diff_result.forces['sph4__Heave']]
+    dif += [diff_result.forces['sph5__Heave']]
+    dif += [diff_result.forces['sph6__Heave']]
+    dif += [diff_result.forces['sph7__Heave']]
     #print('diffraction force',dif)
     dif = np.array(dif)
 
