@@ -101,7 +101,7 @@ def objective2(x,args):         #   Calculates LCOE
     maxd = maxd + distance_check(wecx,wecy,r)
     return maxd
 
-def objective3(x,args): # multi objective
+def objective3(x,args): # multi objective 
     J1 = objective1(x,args)
     J2 = objective2(x,args)
     J3 = 0.5*J1/0.02 + 0.5*J2/100

@@ -40,9 +40,14 @@ A = 1
 rho_wec = 850
 p = [omega,A,rho_wec,nwec]
 opt={'xatol': 1e-5, 'disp': True}  
-fig = plt.figure(1)
-plt.plot(wecx,wecy,linestyle='none',marker = 'o',markersize = r*2,color='y')
-# ================================================================================== #
+fig,(fig1,fig2) = plt.subplots(2,1)
+fig1.scatter#(wecx,wecy,linestyle='none',marker = 'o',markersize = r*2,color='y')
+
+# ================================================================================= #
+#                               Optimization Code                                   #
+# ================================================================================= #
+# Run Optimization
+
 from pymoo.core.problem import ElementwiseProblem
 
 class MDO_Problem(ElementwiseProblem):
@@ -68,6 +73,7 @@ class MDO_Problem(ElementwiseProblem):
 
 problem=MDO_Problem()
 
+algorithm = NSGA2(pop_size=10)
 
 termination = DefaultMultiObjectiveTermination(
     xtol=1e-8,
@@ -77,20 +83,14 @@ termination = DefaultMultiObjectiveTermination(
     n_max_gen=15,
     n_max_evals=1000
 )
-
-# ================================================================================= #
-#                               Optimization Code                                   #
-# ================================================================================= #
-# Run Optimization
-
-algorithm = NSGA2(pop_size=5)
-
 res = minimize(problem,
                algorithm,
                termination,
-               ('n_gen', 15),
+               ('n_gen', 20),
                seed=1,
                verbose=False)
+
+print(res)
 
 plot = Scatter()
 plot.add(problem.pareto_front(), plot_type="line", color="black", alpha=0.7)
