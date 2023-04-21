@@ -4,6 +4,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import modules.model_nWECs as model
 import modules.model_nWECs_fixr as model_fixr
+import pymoo as cow
 
 def distance_check(wecx,wecy,r):
     n = len(wecx)
@@ -117,5 +118,6 @@ def gradient_method(x0,p,bnds,opt):     #   Gradient Method Search Algorithm
     return res.x
 
 def heuristic_method(p,bnds,opt):       #   GA method search algorithm
-    res = scipy_opt.differential_evolution(objective, bounds=bnds, args=p)
+    #res = scipy_opt.differential_evolution(objective, bounds=bnds, args=p)
+
     return res.x
