@@ -35,7 +35,7 @@ def run(x,p):
     m = rho_wec*4*pi/3*wec_radius**3
     
     # Geometry and Hydro Modules
-    beta = 0
+    beta = np.pi/2
     bodies,xyzees = geom.run(wec_radius,wecx,wecy)      #   Get bodies
     #print("after geometry")
     '''pwa_results = pwa.run(bodies,xyzees,1023.0,omega,beta)  #   PWSLAY
@@ -91,4 +91,4 @@ def run(x,p):
     # Power Transmission and Economics Module
     Power_out,LCOE = Econ.run(wec_radius,power_indv,bodies)
 
-    return Power_out,LCOE
+    return LCOE

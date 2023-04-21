@@ -4,5 +4,6 @@
 
 def time_avg_power(XI,d,omega,A):
     power = (1/2)*d*abs(A*XI*omega*1j)**2
+    print(f"damp is {d}")
     #print(f"This is P-signal {power}")
     return power
