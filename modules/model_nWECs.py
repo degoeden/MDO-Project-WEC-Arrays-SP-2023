@@ -19,10 +19,10 @@ def run(x,p):
     wecx = np.zeros(nWEC)
     wecy = np.zeros(nWEC)
     damp = np.zeros(nWEC)
-    for i in range(nWEC):
-        wecx[i] = x[1+i*3]
-        wecy[i] = x[2+i*3]
-        damp[i] = x[3+i*3]
+    for i in range(nWEC-1):
+        wecx[i] = x[2+i*3]
+        wecy[i] = x[3+i*3]
+        damp[i] = x[1+i*3]
     
     # Unpack Parameters
     omega = p[0]
