@@ -8,7 +8,7 @@ else:
     import meshmagick.hydrostatics_old as hs
 from capytaine.bem.airy_waves import froude_krylov_force
 
-def run(r,wave_direction,omega,x,y):
+def run(r,nWEC,wave_direction,omega,x,y):
     # sphere 1
     body = cpt.Sphere(radius=r,center=(0,0,0),name='sph')
     body.keep_immersed_part()
@@ -18,10 +18,13 @@ def run(r,wave_direction,omega,x,y):
     body.hydrostatic_stiffness = body.compute_hydrostatic_stiffness()
 
     # create array
-    array = body + body.translated((x[1],y[1],0),name='sph2') + body.translated((x[2],y[2],0),name='sph3') + body.translated((x[3],y[3],0),name='sph4')
+    array = body
+    dofnames = ['sph__Heave']
+    for i in range(1,nWEC):
+        array += body.translated((x[i],y[i],0),name=f'sph{i+1}')
+        dofnames.append(f'sph{i+1}__Heave')
     array.add_all_rigid_body_dofs()
-    array.keep_only_dofs(dofs=['sph__Heave','sph2__Heave','sph3__Heave','sph4__Heave'])
-
+    array.keep_only_dofs(dofs=dofnames)
     # solve diff and rad probs
     solver = cpt.BEMSolver()
 
@@ -37,48 +40,37 @@ def run(r,wave_direction,omega,x,y):
 
     # damping
     B = [(dataset['radiation_damping'].sel(radiating_dof=['sph__Heave'],
-                                        influenced_dof=['sph__Heave']))]
-    B += [(dataset['radiation_damping'].sel(radiating_dof=['sph2__Heave'],
-                                        influenced_dof=['sph2__Heave']))]
-    B += [(dataset['radiation_damping'].sel(radiating_dof=['sph3__Heave'],
-                                        influenced_dof=['sph3__Heave']))]
-    B += [(dataset['radiation_damping'].sel(radiating_dof=['sph4__Heave'],
-                                        influenced_dof=['sph4__Heave']))]
+                                          influenced_dof=['sph__Heave']))]
+    for i in range(1,nWEC):
+        B += [(dataset['radiation_damping'].sel(radiating_dof=[f'sph{i+1}__Heave'],
+                                               influenced_dof=[f'sph{i+1}__Heave']))]
     B = np.array(B)
 
     # added mass
-    A1 = np.array(dataset['added_mass'].sel(radiating_dof=['sph__Heave'],
-                                        influenced_dof=['sph__Heave']))
-    A2 = np.array(dataset['added_mass'].sel(radiating_dof=['sph2__Heave'],
-                                        influenced_dof=['sph2__Heave']))
-    A3 = np.array(dataset['added_mass'].sel(radiating_dof=['sph3__Heave'],
-                                        influenced_dof=['sph3__Heave']))
-    A4 = np.array(dataset['added_mass'].sel(radiating_dof=['sph4__Heave'],
-                                        influenced_dof=['sph4__Heave']))
-    A = np.array([A1, A2, A3, A4])
-
+    A = np.zeros(nWEC)
+    A[0] = np.array(dataset['added_mass'].sel(radiating_dof=['sph__Heave'],
+                                             influenced_dof=['sph__Heave']))
+    for i in range(1,nWEC):
+        A[i] = np.array(dataset['added_mass'].sel(radiating_dof=[f'sph{i+1}__Heave'],
+                                                 influenced_dof=[f'sph{i+1}__Heave']))
+    
     # hydrostatic stiffness
-    C1 = np.array(dataset['hydrostatic_stiffness'].sel(radiating_dof=['sph__Heave'],
-                                        influenced_dof=['sph__Heave']))
-    C2 = np.array(dataset['hydrostatic_stiffness'].sel(radiating_dof=['sph2__Heave'],
-                                        influenced_dof=['sph2__Heave']))
-    C3 = np.array(dataset['hydrostatic_stiffness'].sel(radiating_dof=['sph3__Heave'],
-                                        influenced_dof=['sph3__Heave']))
-    C4 = np.array(dataset['hydrostatic_stiffness'].sel(radiating_dof=['sph4__Heave'],
-                                        influenced_dof=['sph4__Heave']))
-    C = np.array([C1, C2, C3, C4])
+    C = np.zeros(nWEC)
+    C[0] = np.array(dataset['hydrostatic_stiffness'].sel(radiating_dof=['sph__Heave'],
+                                                        influenced_dof=['sph__Heave']))
+    for i in range(1,nWEC):
+        C[i] = np.array(dataset['hydrostatic_stiffness'].sel(radiating_dof=[f'sph{i+1}__Heave'],
+                                                            influenced_dof=[f'sph{i+1}__Heave']))
 
     # heave exciting forces
     FK = [froude_krylov_force(diff_prob)['sph__Heave']]
-    FK += [froude_krylov_force(diff_prob)['sph2__Heave']]
-    FK += [froude_krylov_force(diff_prob)['sph3__Heave']]
-    FK += [froude_krylov_force(diff_prob)['sph4__Heave']]
+    for i in range(1,nWEC):
+        FK += [froude_krylov_force(diff_prob)[f'sph{i+1}__Heave']]
     FK = np.array(FK)
 
     dif = [diff_result.forces['sph__Heave']]
-    dif += [diff_result.forces['sph2__Heave']]
-    dif += [diff_result.forces['sph3__Heave']]
-    dif += [diff_result.forces['sph4__Heave']]
+    for i in range(1,nWEC):
+        dif += [diff_result.forces[f'sph{i+1}__Heave']]
     dif = np.array(dif)
 
     F = FK + dif

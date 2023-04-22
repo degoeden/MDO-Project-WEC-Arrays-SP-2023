@@ -2,6 +2,7 @@
 import optimization_interfaces.GA_interface as GA
 import numpy as np
 import matplotlib.pyplot as plt
+import csv
 # ================================================================================= #
 #                                   Set-Up                                          #
 # ================================================================================= #
@@ -11,11 +12,12 @@ omega = 1.047
 A = 1.5
 rho_wec = 850
 p = [omega,A,rho_wec,nwec]
+limits = {'r':[1,10], 'd':[0,6], 'x':[-100,100], 'y':[-100,100]}
 # ================================================================================= #
 #                               Optimization Code                                   #
 # ================================================================================= #
 # Run Optimization
-X,F = GA.MOCHA(p)      #   Heuristic Optimization
+X,F = GA.MOCHA(p,limits)      #   Heuristic Optimization
 # ================================================================================= #
 print(f"The x is {X}")
 print(F)
@@ -38,3 +40,13 @@ plt.xlim([-100,100])
 plt.ylim([-100,100])
 
 plt.show()'''
+
+F2table = {F[i,0]:F[i,1] for i in range(len(F[:,0]))}
+F1 = np.sort(F[:,0])
+F2 = [F2table[i] for i in F1]
+
+with open('f1and2.csv', 'w', newline='') as csvfile:
+
+    writer = csv.writer(csvfile, delimiter=',')
+    for i in range(len(F)):
+        writer.writerow([F1[i],F2[i]])

@@ -32,7 +32,7 @@ def run(x,p):
     
     # Hydro Module
     beta = 0
-    A,B,C,F = hydro.run(wec_radius,beta,omega,wecx,wecy)
+    A,B,C,F = hydro.run(wec_radius,nWEC,beta,omega,wecx,wecy)
     
     # Dynamics and Controls Modules
     power_indv = np.zeros(nWEC)

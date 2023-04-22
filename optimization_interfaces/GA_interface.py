@@ -16,12 +16,27 @@ import modules.maximum_distance as J2
 
 class MyProblem(ElementwiseProblem):
 
-    def __init__(self,p):
-        super().__init__(n_var=11,
+    def __init__(self,p,limits):
+        nwec = p[3]
+        n_var=3*(nwec-1)+2
+        xl = np.zeros(n_var)
+        xu = np.zeros(n_var)
+        xl[0] = limits['r'][0]
+        xu[0] = limits['r'][1]
+        xl[1] = limits['d'][0]
+        xu[1] = limits['d'][1]
+        for i in range(nwec-1):
+            xl[i*3+2] = limits['x'][0]
+            xu[i*3+2] = limits['x'][1]
+            xl[i*3+3] = limits['y'][0]
+            xu[i*3+3] = limits['y'][1]
+            xl[i*3+4] = limits['d'][0]
+            xu[i*3+4] = limits['d'][1]
+        super().__init__(n_var=n_var,
                          n_obj=1,
                          n_ieq_constr=1,
-                         xl=np.array([1,0,-100,-100,0,-100,-100,0,-100,-100,0]),
-                         xu=np.array([10,6,100,100,6,100,100,6,100,100,6]))
+                         xl=xl,
+                         xu=xu)
         self.parameters = p
 
     def _evaluate(self, x, out, *args, **kwargs):
@@ -33,12 +48,27 @@ class MyProblem(ElementwiseProblem):
 
 class MyHardProblem(ElementwiseProblem):
     
-    def __init__(self,p):
-        super().__init__(n_var=11,
+    def __init__(self,p,limits):
+        nwec = p[3]
+        n_var=3*(nwec-1)+2
+        xl = np.zeros(n_var)
+        xu = np.zeros(n_var)
+        xl[0] = limits['r'][0]
+        xu[0] = limits['r'][1]
+        xl[1] = limits['d'][0]
+        xu[1] = limits['d'][1]
+        for i in range(nwec-1):
+            xl[i*3+2] = limits['x'][0]
+            xu[i*3+2] = limits['x'][1]
+            xl[i*3+3] = limits['y'][0]
+            xu[i*3+3] = limits['y'][1]
+            xl[i*3+4] = limits['d'][0]
+            xu[i*3+4] = limits['d'][1]
+        super().__init__(n_var=n_var,
                          n_obj=2,
                          n_ieq_constr=1,
-                         xl=np.array([1,0,-100,-100,0,-100,-100,0,-100,-100,0]),
-                         xu=np.array([10,6,100,100,6,100,100,6,100,100,6]))
+                         xl=xl,
+                         xu=xu)
         self.parameters = p
 
     def _evaluate(self, x, out, *args, **kwargs):
@@ -49,10 +79,10 @@ class MyHardProblem(ElementwiseProblem):
         out["F"] = [f1,f2]
         out["G"] = [g1]
 
-def GA(p):       #   GA method search algorithm
-    problem = MyProblem(p)
+def GA(p,limits):       #   GA method search algorithm
+    problem = MyProblem(p,limits)
     algorithm = NSGA2(
-        pop_size=10,
+        pop_size=15,
         n_offsprings=10,
         sampling=FloatRandomSampling(),
         crossover=SBX(prob=0.9, eta=15),
@@ -70,8 +100,8 @@ def GA(p):       #   GA method search algorithm
     F = res.F
     return X,F
 
-def MOCHA(p):       #   GA method search algorithm
-    problem = MyHardProblem(p)
+def MOCHA(p,limits):       #   GA method search algorithm
+    problem = MyHardProblem(p,limits)
     algorithm = NSGA2(
         pop_size=10,
         n_offsprings=10,
@@ -80,7 +110,7 @@ def MOCHA(p):       #   GA method search algorithm
         mutation=PM(eta=20),
         eliminate_duplicates=True
     )
-    termination = get_termination("n_gen", 10)
+    termination = get_termination("n_gen", 500)
     res = minimize(problem,
                algorithm,
                termination,
