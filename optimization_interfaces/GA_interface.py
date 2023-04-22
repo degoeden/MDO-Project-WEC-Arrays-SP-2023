@@ -1,4 +1,4 @@
-# Contains Functions to complets A3b
+# Handels basic GA and MOCHA stuff
 import numpy as np
 import matplotlib.pyplot as plt
 import modules.model_nWECs as model
@@ -26,7 +26,6 @@ class MyProblem(ElementwiseProblem):
 
     def _evaluate(self, x, out, *args, **kwargs):
         p = self.parameters
-        print(f"Our parameters are {p}")
         f1 = model.run(x,p)
         g1 = 3*x[0] - minimum_distance.run(x,p)
         out["F"] = [f1]
@@ -44,14 +43,13 @@ class MyHardProblem(ElementwiseProblem):
 
     def _evaluate(self, x, out, *args, **kwargs):
         p = self.parameters
-        print(f"Our parameters are {p}")
         f1 = model.run(x,p)
         f2 = J2.run(x,p)
         g1 = 3*x[0] - minimum_distance.run(x,p)
         out["F"] = [f1,f2]
         out["G"] = [g1]
 
-def normal(p):       #   GA method search algorithm
+def GA(p):       #   GA method search algorithm
     problem = MyProblem(p)
     algorithm = NSGA2(
         pop_size=10,

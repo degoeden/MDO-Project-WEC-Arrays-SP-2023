@@ -28,5 +28,5 @@ def run(size,Power):
     
     FCR = 0.09                          # fixed charge rate (value for wind)
     LCOE = ((FCR*capex) + opex)/AEP     # levelized cost of energy
-    print('da LCOE',LCOE)
+    #print('da LCOE',LCOE)
     return AEP, LCOE

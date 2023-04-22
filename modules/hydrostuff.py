@@ -45,7 +45,6 @@ def run(r,wave_direction,omega,x,y):
     B += [(dataset['radiation_damping'].sel(radiating_dof=['sph4__Heave'],
                                         influenced_dof=['sph4__Heave']))]
     B = np.array(B)
-    print('damping',B)
 
     # added mass
     A1 = np.array(dataset['added_mass'].sel(radiating_dof=['sph__Heave'],
@@ -57,7 +56,6 @@ def run(r,wave_direction,omega,x,y):
     A4 = np.array(dataset['added_mass'].sel(radiating_dof=['sph4__Heave'],
                                         influenced_dof=['sph4__Heave']))
     A = np.array([A1, A2, A3, A4])
-    print('added mass',A)
 
     # hydrostatic stiffness
     C1 = np.array(dataset['hydrostatic_stiffness'].sel(radiating_dof=['sph__Heave'],
