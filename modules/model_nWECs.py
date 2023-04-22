@@ -10,7 +10,7 @@ import modules.hydrostuff as hydro
 
 def run(x,p):
     nWEC = p[3]
-      
+    
     # Unpack Design Variables
     wec_radius = x[0]
     wecx = np.zeros(nWEC)

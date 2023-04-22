@@ -82,7 +82,7 @@ class MyHardProblem(ElementwiseProblem):
 def GA(p,limits):       #   GA method search algorithm
     problem = MyProblem(p,limits)
     algorithm = NSGA2(
-        pop_size=15,
+        pop_size=10,
         n_offsprings=10,
         sampling=FloatRandomSampling(),
         crossover=SBX(prob=0.9, eta=15),
@@ -103,14 +103,14 @@ def GA(p,limits):       #   GA method search algorithm
 def MOCHA(p,limits):       #   GA method search algorithm
     problem = MyHardProblem(p,limits)
     algorithm = NSGA2(
-        pop_size=10,
+        pop_size=100,
         n_offsprings=10,
         sampling=FloatRandomSampling(),
         crossover=SBX(prob=0.9, eta=15),
         mutation=PM(eta=20),
         eliminate_duplicates=True
     )
-    termination = get_termination("n_gen", 500)
+    termination = get_termination("n_gen", 200)
     res = minimize(problem,
                algorithm,
                termination,
@@ -118,14 +118,10 @@ def MOCHA(p,limits):       #   GA method search algorithm
                save_history=True,
                verbose=True)
     
-    #pf = problem.pareto_front(10)
-    #print(f"What is this : {pf}")
-    #Scatter(title='Pareto curve slayed').add(pf).show()
-    
     X = res.X
     F = res.F
-    plt.figure(figsize=(7, 5))
+    '''plt.figure(figsize=(7, 5))
     plt.scatter(F[:, 0], F[:, 1], s=30, facecolors='none', edgecolors='blue')
     plt.title("Objective Space")
-    plt.show()
+    plt.show()'''
     return X,F

@@ -3,6 +3,7 @@ import optimization_interfaces.GA_interface as GA
 import numpy as np
 import matplotlib.pyplot as plt
 import csv
+import time
 # ================================================================================= #
 #                                   Set-Up                                          #
 # ================================================================================= #
@@ -17,10 +18,13 @@ limits = {'r':[1,10], 'd':[0,6], 'x':[-100,100], 'y':[-100,100]}
 #                               Optimization Code                                   #
 # ================================================================================= #
 # Run Optimization
+start_time = time.time()
 X,F = GA.MOCHA(p,limits)      #   Heuristic Optimization
+end_time = time.time()
+print(f"This took this long: {end_time-start_time}")
 # ================================================================================= #
-print(f"The x is {X}")
-print(F)
+#print(f"The x is {X}")
+#print(F)
 '''damp = np.zeros(nwec)
 wecx = np.zeros(nwec)
 wecy = np.zeros(nwec)
