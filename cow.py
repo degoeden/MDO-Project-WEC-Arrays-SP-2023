@@ -46,11 +46,17 @@ plt.ylim([-100,100])
 plt.show()'''
 
 F2table = {F[i,0]:F[i,1] for i in range(len(F[:,0]))}
+Xtable = {F[i,0]:X[i,:] for i in range(len(F[:,0]))}
 F1 = np.sort(F[:,0])
 F2 = [F2table[i] for i in F1]
-
+X = [Xtable[i] for i in F1]
+print(X)
 with open('f1and2.csv', 'w', newline='') as csvfile:
-
     writer = csv.writer(csvfile, delimiter=',')
     for i in range(len(F)):
         writer.writerow([F1[i],F2[i]])
+
+with open('x.csv', 'w', newline='') as csvfile:
+    writer = csv.writer(csvfile, delimiter=',')
+    for i in range(len(X)):
+        writer.writerow(X[i])
