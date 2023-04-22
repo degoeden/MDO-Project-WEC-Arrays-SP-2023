@@ -1,5 +1,5 @@
 # To run A3b code, import the A3 interface and run the desired A3 function: gradient_method or heuristic_method
-import optimization_interfaces.A3_interface as A3
+import optimization_interfaces.GA_interface as GA
 import numpy as np
 import matplotlib.pyplot as plt
 # ================================================================================= #
@@ -15,7 +15,7 @@ p = [omega,A,rho_wec,nwec]
 #                               Optimization Code                                   #
 # ================================================================================= #
 # Run Optimization
-X,F = A3.MOCHA(p)      #   Heuristic Optimization
+X,F = GA.MOCHA(p)      #   Heuristic Optimization
 # ================================================================================= #
 print(f"The x is {X}")
 print(F)

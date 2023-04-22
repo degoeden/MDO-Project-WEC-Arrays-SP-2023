@@ -1,4 +1,6 @@
+# Calculates the distance between the closest two WECs
 import numpy as np
+
 def run(x,p):
     nwec = p[3]                 # Number of WECs
     wecx = np.zeros(nwec)       # Stores x's
@@ -10,5 +12,5 @@ def run(x,p):
     for i in range(nwec):
         for j in range(i+1,nwec):
             d.append(((wecx[i]-wecx[j])**2 + (wecy[i]-wecy[j])**2)**(1/2))      # Compute the distance
-    maxd = max(d)               # What is the longest distance?
-    return maxd
+    mind = min(d)               # What is the shortest distance?
+    return (mind)

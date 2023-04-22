@@ -2,8 +2,8 @@ import numpy as np
 
 # new econ mod ?
 
-def run(size,Power,bodies):
-    nWEC = len(bodies)
+def run(size,Power):
+    nWEC = len(Power)
     c_vol = 1500                        # [$/m^3] cost of WEC per unit volume (taken from pelamis WEC specs)
     rWEC = size
     wec_vol = (4/3)*np.pi*(rWEC**2)     # volume of each WEC
@@ -22,9 +22,8 @@ def run(size,Power,bodies):
     opex = main + refit + decomish      # annual operational expenses
     
     CW = 0.3                            # capture width (aka WEC efficiency)
-    p_sig = [p_sig[0] for p_sig in Power.values()]
-    P = np.sum(p_sig)
-    print(f'Power is: {P/1e6} MW')
+    P = np.sum(Power)
+    #print(f'Power is: {P/1e6} MW')
     AEP = P*CW                           # annual energy production
     
     FCR = 0.09                          # fixed charge rate (value for wind)
