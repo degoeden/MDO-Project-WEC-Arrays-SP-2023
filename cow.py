@@ -51,12 +51,12 @@ Xtable = {F[i,0]:X[i,:] for i in range(len(F[:,0]))}
 F1 = np.sort(F[:,0])
 F2 = [F2table[i] for i in F1]
 X = [Xtable[i] for i in F1]
-with open(f'domF@{end_time}.csv', 'w', newline='') as csvfile:
+with open(f'paretos/domF@{end_time}.csv', 'w', newline='') as csvfile:
     writer = csv.writer(csvfile, delimiter=',')
     for i in range(len(F)):
         writer.writerow([F1[i],F2[i]])
 
-with open(f'domX@{end_time}.csv', 'w', newline='') as csvfile:
+with open(f'paretos/domX@{end_time}.csv', 'w', newline='') as csvfile:
     writer = csv.writer(csvfile, delimiter=',')
     for i in range(len(X)):
         writer.writerow(X[i])
