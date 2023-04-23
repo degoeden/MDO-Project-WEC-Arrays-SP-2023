@@ -19,11 +19,11 @@ limits = {'r':[1,10], 'd':[0,6], 'x':[-100,100], 'y':[-100,100]}
 # ================================================================================= #
 # Run Optimization
 start_time = time.time()
-X,F,H = GA.GA(p,limits)      #   Heuristic Optimization
+X,F,H = GA.MOCHA(p,limits)      #   Heuristic Optimization
 end_time = time.time()
 print(f"This took this long: {end_time-start_time}")
 # ================================================================================= #
-print(X)
+'''print(X)
 print(F)
 damp = np.zeros(nwec)
 wecx = np.zeros(nwec)
@@ -43,8 +43,8 @@ ax.axis('equal')
 #plt.xlim([-100,100])
 #plt.ylim([-100,100])
 
-plt.show()
-'''
+plt.show()'''
+
 # save nondominated
 F2table = {F[i,0]:F[i,1] for i in range(len(F[:,0]))}
 Xtable = {F[i,0]:X[i,:] for i in range(len(F[:,0]))}
@@ -59,7 +59,7 @@ with open(f'domF@{end_time}.csv', 'w', newline='') as csvfile:
 with open(f'domX@{end_time}.csv', 'w', newline='') as csvfile:
     writer = csv.writer(csvfile, delimiter=',')
     for i in range(len(X)):
-        writer.writerow(X[i])'''
+        writer.writerow(X[i])
 
 # all points
 '''with open(f'allF@{end_time}.csv', 'w', newline='') as csvfile:
