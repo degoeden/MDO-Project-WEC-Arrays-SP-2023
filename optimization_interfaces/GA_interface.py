@@ -111,7 +111,7 @@ def MOCHA(p,limits):       #   GA method search algorithm
         mutation=PM(eta=20),
         eliminate_duplicates=True
     )
-    termination = get_termination("n_gen", 400)
+    termination = get_termination("n_gen", 500)
     res = minimize(problem,
                algorithm,
                termination,
