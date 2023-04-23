@@ -103,14 +103,14 @@ def GA(p,limits):       #   GA method search algorithm
 def MOCHA(p,limits):       #   GA method search algorithm
     problem = MyHardProblem(p,limits)
     algorithm = NSGA2(
-        pop_size=10,
-        n_offsprings=10,
+        pop_size=50,
+        n_offsprings=20,
         sampling=FloatRandomSampling(),
         crossover=SBX(prob=0.9, eta=15),
         mutation=PM(eta=20),
         eliminate_duplicates=True
     )
-    termination = get_termination("n_gen", 10)
+    termination = get_termination("n_gen", 400)
     res = minimize(problem,
                algorithm,
                termination,
