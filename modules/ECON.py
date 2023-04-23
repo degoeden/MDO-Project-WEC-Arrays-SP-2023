@@ -6,7 +6,7 @@ def run(size,Power):
     nWEC = len(Power)
     c_vol = 1500                        # [$/m^3] cost of WEC per unit volume (taken from pelamis WEC specs)
     rWEC = size
-    wec_vol = (4/3)*np.pi*(rWEC**2)     # volume of each WEC
+    wec_vol = (4/3)*np.pi*(rWEC**3)     # volume of each WEC
     cWEC = c_vol*wec_vol*nWEC           # total capital cost of all WECs
     c_moor = 150000*nWEC                # cost of mooring all WECs
     c_install = 750000*nWEC             # installation costs for all WECs

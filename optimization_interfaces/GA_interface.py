@@ -98,7 +98,8 @@ def GA(p,limits):       #   GA method search algorithm
                verbose=True)
     X = res.X
     F = res.F
-    return X,F
+    H = res.history
+    return X,F,H
 
 def MOCHA(p,limits):       #   GA method search algorithm
     problem = MyHardProblem(p,limits)
