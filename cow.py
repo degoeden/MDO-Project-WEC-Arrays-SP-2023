@@ -19,12 +19,11 @@ limits = {'r':[1,10], 'd':[0,6], 'x':[-100,100], 'y':[-100,100]}
 # ================================================================================= #
 # Run Optimization
 start_time = time.time()
-X,F = GA.MOCHA(p,limits)      #   Heuristic Optimization
+X,F,H = GA.MOCHA(p,limits)      #   Heuristic Optimization
 end_time = time.time()
 print(f"This took this long: {end_time-start_time}")
 # ================================================================================= #
-#print(f"The x is {X}")
-#print(F)
+print(H)
 '''damp = np.zeros(nwec)
 wecx = np.zeros(nwec)
 wecy = np.zeros(nwec)
@@ -45,18 +44,29 @@ plt.ylim([-100,100])
 
 plt.show()'''
 
+# save nondominated
 F2table = {F[i,0]:F[i,1] for i in range(len(F[:,0]))}
 Xtable = {F[i,0]:X[i,:] for i in range(len(F[:,0]))}
 F1 = np.sort(F[:,0])
 F2 = [F2table[i] for i in F1]
 X = [Xtable[i] for i in F1]
-print(X)
-with open('f1and2.csv', 'w', newline='') as csvfile:
+with open(f'domF@{end_time}.csv', 'w', newline='') as csvfile:
     writer = csv.writer(csvfile, delimiter=',')
     for i in range(len(F)):
         writer.writerow([F1[i],F2[i]])
 
-with open('x.csv', 'w', newline='') as csvfile:
+with open(f'domX@{end_time}.csv', 'w', newline='') as csvfile:
     writer = csv.writer(csvfile, delimiter=',')
     for i in range(len(X)):
         writer.writerow(X[i])
+
+# all points
+'''with open(f'allF@{end_time}.csv', 'w', newline='') as csvfile:
+    writer = csv.writer(csvfile, delimiter=',')
+    for i in range(len(H.F)):
+        writer.writerow(H.F[i])
+
+with open(f'allX@{end_time}.csv', 'w', newline='') as csvfile:
+    writer = csv.writer(csvfile, delimiter=',')
+    for i in range(len(H.X)):
+        writer.writerow(H.X[i])'''

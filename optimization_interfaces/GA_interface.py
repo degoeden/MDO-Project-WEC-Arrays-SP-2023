@@ -120,8 +120,9 @@ def MOCHA(p,limits):       #   GA method search algorithm
     
     X = res.X
     F = res.F
+    H = res.history
     '''plt.figure(figsize=(7, 5))
     plt.scatter(F[:, 0], F[:, 1], s=30, facecolors='none', edgecolors='blue')
     plt.title("Objective Space")
     plt.show()'''
-    return X,F
+    return X,F,H
