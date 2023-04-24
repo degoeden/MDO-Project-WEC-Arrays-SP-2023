@@ -57,6 +57,8 @@ def gradient_method(x0,p,limits):
         xu[i*3+3] = limits['y'][1]
         xl[i*3+4] = limits['d'][0]
         xu[i*3+4] = limits['d'][1]
+    xl = translate.normal2scaled(xl)
+    xu = translate.normal2scaled(xu)
     bnds = [[l,u] for l,u in zip(xl,xu)]
     res = scipy_opt.minimize(objective,x0,p,'slsqp',bounds=bnds,options = opt,tol = 1e-1, )
     X = translate.scaled2normal(res.x)
