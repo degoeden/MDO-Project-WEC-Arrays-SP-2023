@@ -27,7 +27,20 @@ def run(x,p):
     Jacobian = np.array([Lr,Ld,Lx,Ly])
     Hessian = np.array([hrr,hdd,hxx,hyy])
     #print('\n','Jacobian is: ','\n',Jacobian,'\n')
-    #print('\n','Hessian is: ','\n',Hessian,'\n')
+    print('\n','Hessian is: ','\n',Hessian,'\n')
     cn=np.max(np.abs(Hessian))/np.min(np.abs(Hessian))
-    #print('\n condition number is: ',cn)
-    return Jacobian, Hessian,cn
+    print('\n condition number is: ',cn)
+    return Hessian
+
+# optimal result
+x = [1.7562311471573304,3.465776438818435,-1.575182077557903,23.7495085127213,
+     3.452698396293388,-5.288210634141958,-0.35581646058155847,3.4813916263807125,
+     -6.948417150022743,23.815801189899542,3.4667368900792064]
+
+nwec = 4
+omega = 1.047
+A = 1.5
+rho_wec = 850
+p = [omega,A,rho_wec,nwec]
+
+H = run(x,p)
