@@ -39,7 +39,7 @@ def objective_scaled(x,args):
     LCOE = model.run(x,args)
     return LCOE
 
-def gradient_method(x0,p,limits):
+def gradient_method_scaled(x0,p,limits):
     x0 = translate.normal2scaled(x0)
     opt={'disp': True}
     nwec = p[3]
@@ -60,6 +60,6 @@ def gradient_method(x0,p,limits):
     xl = translate.normal2scaled(xl)
     xu = translate.normal2scaled(xu)
     bnds = [[l,u] for l,u in zip(xl,xu)]
-    res = scipy_opt.minimize(objective,x0,p,'slsqp',bounds=bnds,options = opt,tol = 1e-1, )
+    res = scipy_opt.minimize(objective_scaled,x0,p,'slsqp',bounds=bnds,options = opt,tol = 1e-1, )
     X = translate.scaled2normal(res.x)
     return X
