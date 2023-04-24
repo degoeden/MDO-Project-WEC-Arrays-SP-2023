@@ -1,7 +1,7 @@
 # Translates from scaled to normal and normal to scaled
 import numpy as np
 def normal2scaled(x):
-    nwec = (len(x)-2)/3 + 1
+    nwec = int((len(x)-2)/3 + 1)
     multiplier = {'r':1, 'x':10, 'y':100, 'd':1}
     x_bar =  np.zeros(len(x))
     x_bar[0] = x[0]*multiplier['r']
@@ -13,7 +13,7 @@ def normal2scaled(x):
     return x_bar
 
 def scaled2normal(x_bar):
-    nwec = (len(x_bar)-2)/3 + 1
+    nwec = int((len(x_bar)-2)/3 + 1)
     multiplier = {'r':1, 'x':10, 'y':100, 'd':1}
     x =  np.zeros(len(x_bar))
     x[0] = x_bar[0]/multiplier['r']
