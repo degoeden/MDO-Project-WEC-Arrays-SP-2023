@@ -2,11 +2,16 @@ import scipy.optimize as scipy_opt
 import modules.model_nWECs as model
 import numpy as np
 import optimization_interfaces.google_translate as translate
+import time
+import modules.minimum_distance as mind
 # ================================================================================= #
 #                               Unscaled / Normal                                   #
 # ================================================================================= #
 def objective(x,args):
     LCOE = model.run(x,args)
+    h = 3*x[0] - mind.run(x,args)
+    if h > 0:
+        LCOE = LCOE + 10000*h**2
     return LCOE
 
 def gradient_method(x0,p,limits):
@@ -37,6 +42,9 @@ def gradient_method(x0,p,limits):
 def objective_scaled(x,args):
     x = translate.scaled2normal(x)
     LCOE = model.run(x,args)
+    h = 3*x[0] - mind.run(x,args)
+    if h > 0:
+        LCOE = LCOE + 10000*h**2
     return LCOE
 
 def gradient_method_scaled(x0,p,limits):
@@ -60,6 +68,9 @@ def gradient_method_scaled(x0,p,limits):
     xl = translate.normal2scaled(xl)
     xu = translate.normal2scaled(xu)
     bnds = [[l,u] for l,u in zip(xl,xu)]
-    res = scipy_opt.minimize(objective_scaled,x0,p,'slsqp',bounds=bnds,options = opt,tol = 1e-3, )
+    start = time.time()
+    res = scipy_opt.minimize(objective_scaled,x0,p,'slsqp',bounds=bnds,options = opt,tol = 1e-9)
+    end = time.time()
+    print(f"Time is: {end-start}")
     X = translate.scaled2normal(res.x)
     return X
