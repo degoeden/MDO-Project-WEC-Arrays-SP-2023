@@ -1,6 +1,6 @@
 import numpy as np
 
-# new econ mod ?
+# new econ mod ? heck yeah
 
 def run(size,Power):
     nWEC = len(Power)

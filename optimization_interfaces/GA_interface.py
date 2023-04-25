@@ -12,14 +12,17 @@ from pymoo.optimize import minimize
 from pymoo.visualization.scatter import Scatter
 import modules.minimum_distance as minimum_distance
 import modules.maximum_distance as J2
-# x = [r d1 x2 y2 d2 x3 y3 d3 x4 y4 d4]
+# x = [r d1 x2 y2 d2 x3 y3 d3, ... etc]
 
-class MyProblem(ElementwiseProblem):
+# ================================================================================= #
+#                               Single Objective                                    #
+# ================================================================================= #
+class MyProblem(ElementwiseProblem):        #   Sinlge Objective Problem
 
-    def __init__(self,p,limits):
+    def __init__(self,p,limits):            #   P is parameters, limits is the bounds on each var type
         nwec = p[3]
         n_var=3*(nwec-1)+2
-        xl = np.zeros(n_var)
+        xl = np.zeros(n_var)                #   Lower bounds
         xu = np.zeros(n_var)
         xl[0] = limits['r'][0]
         xu[0] = limits['r'][1]
@@ -41,12 +44,38 @@ class MyProblem(ElementwiseProblem):
 
     def _evaluate(self, x, out, *args, **kwargs):
         p = self.parameters
-        f1 = model.run(x,p)
-        g1 = 3*x[0] - minimum_distance.run(x,p)
+        f1 = model.run(x,p)                         #   Run the model
+        g1 = 3*x[0] - minimum_distance.run(x,p)     #   Check constraint on minimum distance
         out["F"] = [f1]
         out["G"] = [g1]
 
-class MyHardProblem(ElementwiseProblem):
+def GA(p,limits):       #   GA method search algorithm
+    problem = MyProblem(p,limits)
+    algorithm = NSGA2(
+        pop_size=50,
+        n_offsprings=20,
+        sampling=FloatRandomSampling(),
+        crossover=SBX(prob=0.9, eta=15),
+        mutation=PM(eta=20),
+        eliminate_duplicates=True
+    )
+    termination = get_termination("n_gen", 100)
+    res = minimize(problem,
+               algorithm,
+               termination,
+               seed=1,
+               save_history=True,
+               verbose=True)
+    X = res.X
+    F = res.F
+    H = res.history
+    return X,F,H
+
+
+# ================================================================================= #
+#                                     MOCHA                                         #
+# ================================================================================= #
+class MyHardProblem(ElementwiseProblem):    # same problem as before, except 2 objectives
     
     def __init__(self,p,limits):
         nwec = p[3]
@@ -74,34 +103,12 @@ class MyHardProblem(ElementwiseProblem):
     def _evaluate(self, x, out, *args, **kwargs):
         p = self.parameters
         f1 = model.run(x,p)
-        f2 = J2.run(x,p)
+        f2 = J2.run(x,p)                #   2nd objective is minimizing the maximum spacing between wecs
         g1 = 3*x[0] - minimum_distance.run(x,p)
         out["F"] = [f1,f2]
         out["G"] = [g1]
 
-def GA(p,limits):       #   GA method search algorithm
-    problem = MyProblem(p,limits)
-    algorithm = NSGA2(
-        pop_size=10,
-        n_offsprings=10,
-        sampling=FloatRandomSampling(),
-        crossover=SBX(prob=0.9, eta=15),
-        mutation=PM(eta=20),
-        eliminate_duplicates=True
-    )
-    termination = get_termination("n_gen", 10)
-    res = minimize(problem,
-               algorithm,
-               termination,
-               seed=1,
-               save_history=True,
-               verbose=True)
-    X = res.X
-    F = res.F
-    H = res.history
-    return X,F,H
-
-def MOCHA(p,limits):       #   GA method search algorithm
+def MOCHA(p,limits):       #   Multi Objective Constrained Heuristic Algorithim
     problem = MyHardProblem(p,limits)
     algorithm = NSGA2(
         pop_size=50,
@@ -111,7 +118,7 @@ def MOCHA(p,limits):       #   GA method search algorithm
         mutation=PM(eta=20),
         eliminate_duplicates=True
     )
-    termination = get_termination("n_gen", 500)
+    termination = get_termination("n_gen", 100)
     res = minimize(problem,
                algorithm,
                termination,
@@ -122,8 +129,4 @@ def MOCHA(p,limits):       #   GA method search algorithm
     X = res.X
     F = res.F
     H = res.history
-    '''plt.figure(figsize=(7, 5))
-    plt.scatter(F[:, 0], F[:, 1], s=30, facecolors='none', edgecolors='blue')
-    plt.title("Objective Space")
-    plt.show()'''
     return X,F,H
