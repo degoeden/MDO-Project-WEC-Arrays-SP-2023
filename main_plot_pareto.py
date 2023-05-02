@@ -2,7 +2,7 @@ import matplotlib.pyplot as plt
 import csv
 
 f1,f2 = [],[]
-with open('paretos/domF@1682225379.1712525.csv', newline='') as csvfile:
+with open('paretos\domF@1683050987.3668008.csv', newline='') as csvfile:
     spamreader = csv.reader(csvfile, delimiter=',', quotechar='|')
     for row in spamreader:
         f1.append(float(row[0]))
@@ -26,7 +26,7 @@ plt.plot(f1,f2,marker='o',color='#72d9f0',fillstyle = 'none',label = 'Pareto Fro
 plt.plot(utop1,utop2,marker='*',color='#a5cf27',label = 'Utopia Point',markersize=10,linewidth=2)
 plt.text(utop1+0.001,utop2+0.1,'Utopia',color='#a5cf27')
 plt.plot(nadi1,nadi2,marker = 'x',color = '#ff5858',label='Nadir Point',markersize=10,linewidth=2)
-plt.text(nadi1-0.005,nadi2-0.9,'Nadir',color = '#ff5858')
+plt.text(nadi1-0.015,nadi2-4,'Nadir',color = '#ff5858')
 plt.legend
 plt.xlabel('LCOE [$/kWh]',color='#ffffff')
 plt.ylabel('Maximum Array Dimension [m]',color='#ffffff')

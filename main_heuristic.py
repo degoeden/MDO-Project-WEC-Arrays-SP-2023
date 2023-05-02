@@ -8,6 +8,7 @@ import time
 #                                   Set-Up                                          #
 # ================================================================================= #
 # Parameters
+print('Something happened')
 nwec = 4
 omega = 1.047
 A = 1.5

@@ -112,13 +112,13 @@ def MOCHA(p,limits):       #   Multi Objective Constrained Heuristic Algorithim
     problem = MyHardProblem(p,limits)
     algorithm = NSGA2(
         pop_size=50,
-        n_offsprings=20,
+        n_offsprings=30,
         sampling=FloatRandomSampling(),
         crossover=SBX(prob=0.9, eta=15),
         mutation=PM(eta=20),
         eliminate_duplicates=True
     )
-    termination = get_termination("n_gen", 100)
+    termination = get_termination("n_gen", 1000)
     res = minimize(problem,
                algorithm,
                termination,
