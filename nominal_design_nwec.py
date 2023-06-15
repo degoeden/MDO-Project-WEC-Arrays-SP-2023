@@ -1,5 +1,6 @@
 import modules.model_nWECs as model
 import numpy as np
+import time as time
 nwec = 4
 # Design Vector
 r = 3
@@ -23,6 +24,9 @@ omega = 1
 A = 1.5
 rho_wec = 850
 p = [omega,A,rho_wec,nwec]
+start_time = time.time()
 LCOE = model.run(x,p)
+end_time = time.time()
+print(f"This took this long: {end_time-start_time}")
 print("LCOE: ", LCOE)
 print(x)
