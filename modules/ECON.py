@@ -27,7 +27,7 @@ def run(size,Power):
     
     P = np.sum(Power)
     #print(f'Power is: {P/1e6} MW')
-    AEP = P*n_avail*n_trans                           # annual energy production
+    AEP = P*n_avail*n_trans*8760/1000                           # annual energy production
     
     FCR = 0.108                          # fixed charge rate (value for wind)
     LCOE = ((FCR*capex) + opex)/AEP     # levelized cost of energy
