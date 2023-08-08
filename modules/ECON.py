@@ -29,7 +29,7 @@ def run(size,Power):
     #print(f'Power is: {P/1e6} MW')
     AEP = P*n_avail*n_trans                           # annual energy production
     
-    FCR = 0.09                          # fixed charge rate (value for wind)
+    FCR = 0.0108                          # fixed charge rate (value for wind)
     LCOE = ((FCR*capex) + opex)/AEP     # levelized cost of energy
     #print('da LCOE',LCOE)
     return AEP, LCOE
