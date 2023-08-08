@@ -21,10 +21,13 @@ def run(size,Power):
     decomish = 500000/t                 # decomissioning cost normalized to per year
     opex = main + refit + decomish      # annual operational expenses
     
-    CW = 0.3                            # capture width (aka WEC efficiency)
+    # CW = 0.3                            # capture width (aka WEC efficiency)
+    n_avail = 0.95                        # available wave power
+    n_trans = 0.945                        # transmission line efficiency
+    
     P = np.sum(Power)
     #print(f'Power is: {P/1e6} MW')
-    AEP = P*CW                           # annual energy production
+    AEP = P*n_avail*n_trans                           # annual energy production
     
     FCR = 0.09                          # fixed charge rate (value for wind)
     LCOE = ((FCR*capex) + opex)/AEP     # levelized cost of energy
